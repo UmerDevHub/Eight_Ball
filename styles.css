@@ -1152,6 +1152,7 @@ body.admin-mode .price-editable:focus {
    ========================================== */
 .compact-price-table {
     width: 100%;
+    table-layout: fixed; /* Guarantees perfectly equal and balanced column widths */
     border-collapse: collapse;
     margin-top: 0.8rem;
     margin-bottom: 0.5rem;
@@ -1160,19 +1161,32 @@ body.admin-mode .price-editable:focus {
     border-radius: var(--radius-sm);
     overflow: hidden;
     border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 .compact-price-table th, .compact-price-table td {
-    padding: 0.45rem 0.6rem;
+    padding: 0.5rem 0.75rem;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
+    white-space: nowrap; /* Prevents ugly price line breaks on mobile devices */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Equal column allocation */
+.compact-price-table th:first-child, .compact-price-table td:first-child {
+    width: 34%;
+}
+.compact-price-table th:nth-child(2), .compact-price-table td:nth-child(2),
+.compact-price-table th:nth-child(3), .compact-price-table td:nth-child(3) {
+    width: 33%;
 }
 
 .compact-price-table th {
     background: var(--bg-secondary);
-    color: var(--text-muted);
+    color: var(--text-main); /* High contrast header */
     font-weight: 800;
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -1209,4 +1223,20 @@ body.admin-mode .price-editable:focus {
 .inr-text {
     color: #1d4ed8 !important; /* dark blue */
     font-weight: 800;
+}
+
+/* Responsive Table Scaling for Mobile Screens */
+@media (max-width: 768px) {
+    .compact-price-table {
+        font-size: 0.80rem; /* Compact text size for small screens */
+        margin-top: 0.6rem;
+    }
+    
+    .compact-price-table th, .compact-price-table td {
+        padding: 0.4rem 0.45rem; /* Tight padding to prevent overflow on mobile */
+    }
+    
+    .compact-price-table th {
+        font-size: 0.68rem; /* Highly legible and scale-appropriate headers */
+    }
 }
