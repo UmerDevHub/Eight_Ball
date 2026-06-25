@@ -662,6 +662,26 @@ header {
     background: var(--bg-primary);
     box-shadow: var(--shadow-md);
     margin-top: 2rem;
+    -webkit-overflow-scrolling: touch; /* Smooth kinetic scrolling on iOS */
+}
+
+/* Premium Custom Scrollbars for VIP Table on Mobile */
+.vip-table-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.vip-table-container::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-radius: 10px;
+}
+
+.vip-table-container::-webkit-scrollbar-thumb {
+    background: var(--border-hover);
+    border-radius: 10px;
+}
+
+.vip-table-container::-webkit-scrollbar-thumb:hover {
+    background: var(--text-light);
 }
 
 .vip-table {
@@ -669,12 +689,13 @@ header {
     border-collapse: collapse;
     text-align: center;
     font-family: var(--font-display);
-    min-width: 750px;
+    min-width: 820px; /* Safe minimum width to prevent columns squishing on mobile */
 }
 
 .vip-table th, .vip-table td {
     padding: 1.5rem 1.2rem;
     border-bottom: 1px solid var(--border-color);
+    white-space: nowrap; /* Ensures no text wraps or shows ellipsis */
 }
 
 .vip-table th {
@@ -701,13 +722,44 @@ header {
     font-size: 1.1rem;
 }
 
-/* Row Tiers Left Colors */
-.row-bronze { border-left: 6px solid #b45309; background: rgba(180, 83, 9, 0.02); }
-.row-silver { border-left: 6px solid #475569; background: rgba(71, 85, 105, 0.02); }
-.row-gold { border-left: 6px solid #b59000; background: rgba(181, 144, 0, 0.02); }
-.row-emerald { border-left: 6px solid var(--emerald); background: rgba(5, 150, 105, 0.02); }
-.row-diamond { border-left: 6px solid var(--primary); background: rgba(37, 99, 235, 0.02); }
-.row-black-diamond { border-left: 6px solid var(--fuchsia); background: rgba(192, 38, 211, 0.02); }
+/* Row Tiers Left Colors - Applied to first cell for perfect mobile browser rendering */
+.row-bronze td:first-child { border-left: 6px solid #b45309; }
+.row-silver td:first-child { border-left: 6px solid #475569; }
+.row-gold td:first-child { border-left: 6px solid #b59000; }
+.row-emerald td:first-child { border-left: 6px solid var(--emerald); }
+.row-diamond td:first-child { border-left: 6px solid var(--primary); }
+.row-black-diamond td:first-child { border-left: 6px solid var(--fuchsia); }
+
+.row-bronze { background: rgba(180, 83, 9, 0.02); }
+.row-silver { background: rgba(71, 85, 105, 0.02); }
+.row-gold { background: rgba(181, 144, 0, 0.02); }
+.row-emerald { background: rgba(5, 150, 105, 0.02); }
+.row-diamond { background: rgba(37, 99, 235, 0.02); }
+.row-black-diamond { background: rgba(192, 38, 211, 0.02); }
+
+/* Responsive VIP Table Styling for Mobile */
+@media (max-width: 768px) {
+    .vip-table {
+        min-width: 820px; /* Safe minimum width to prevent columns squishing on mobile */
+    }
+    
+    .vip-table th, .vip-table td {
+        padding: 0.8rem 0.6rem !important; /* Elegant compact padding on mobile viewports */
+    }
+    
+    .vip-table td {
+        font-size: 0.9rem !important; /* Balanced font size for mobile screens */
+    }
+    
+    .vip-table th {
+        font-size: 0.75rem !important;
+    }
+    
+    .vip-table-container {
+        border-radius: var(--radius-md);
+        margin-top: 1rem;
+    }
+}
 
 .label-bronze { color: #b45309 !important; font-weight: 800; }
 .label-silver { color: #475569 !important; font-weight: 800; }
@@ -1169,8 +1221,6 @@ body.admin-mode .price-editable:focus {
     text-align: left;
     border-bottom: 1px solid var(--border-color);
     white-space: nowrap; /* Prevents ugly price line breaks on mobile devices */
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* Equal column allocation */
