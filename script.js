@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     copyElements.forEach(el => {
         el.addEventListener('click', () => {
+            if (isAdminActive) return; // Prevent copy overlay while editing in Admin Mode!
             const textToCopy = el.querySelector('strong').innerText;
             const button = el.querySelector('.btn-copy');
             const icon = button.querySelector('i');
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v3.0'; // Incremented to force-clear old corrupt cache
+        const CURRENT_VERSION = 'v4.0'; // Incremented to force-clear old cache for new Light Theme
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
