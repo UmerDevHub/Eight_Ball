@@ -413,3 +413,297 @@ footer { border-top: 1px solid var(--border-color); padding: 4rem 0; margin-top:
 .footer-inner { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
 .footer-inner .logo { font-size: 2rem; }
 .footer-inner p { color: var(--text-muted); font-size: 1rem; letter-spacing: 0.5px; }
+
+/* ==========================================
+   ADMIN MODE STYLES
+   ========================================== */
+body.admin-mode .price-editable {
+    outline: 2px dashed rgba(0, 240, 255, 0.5) !important;
+    outline-offset: 4px !important;
+    border-radius: 4px !important;
+    cursor: text !important;
+    position: relative !important;
+    transition: all 0.2s ease !important;
+    min-width: 40px !important;
+    display: inline-block !important;
+    background: rgba(0, 240, 255, 0.05) !important;
+}
+
+body.admin-mode .price-editable:hover {
+    outline-color: rgba(0, 240, 255, 0.9) !important;
+    background: rgba(0, 240, 255, 0.15) !important;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2) !important;
+}
+
+body.admin-mode .price-editable:focus {
+    outline-style: solid !important;
+    outline-color: var(--cyan) !important;
+    background: rgba(0, 240, 255, 0.25) !important;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important;
+}
+
+/* Floating Admin Bar */
+#admin-bar {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%) translateY(150px);
+    width: 90%;
+    max-width: 750px;
+    padding: 1.2rem 2.5rem;
+    background: rgba(11, 17, 32, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 20px;
+    box-shadow: 
+        0 15px 40px rgba(0, 240, 255, 0.15), 
+        0 0 30px rgba(0, 0, 0, 0.8), 
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    z-index: 10000;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#admin-bar.active {
+    transform: translateX(-50%) translateY(0);
+}
+
+#admin-bar .admin-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+#admin-bar .admin-info i {
+    color: var(--cyan);
+    font-size: 1.3rem;
+    animation: spin-gear 4s linear infinite;
+}
+
+@keyframes spin-gear {
+    100% { transform: rotate(360deg); }
+}
+
+#admin-bar .admin-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.admin-btn {
+    padding: 0.7rem 1.4rem;
+    border-radius: 10px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.admin-btn-save {
+    background: linear-gradient(135deg, var(--cyan) 0%, #00a2ff 100%);
+    color: #020617;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+
+.admin-btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 240, 255, 0.5);
+}
+
+.admin-btn-exit {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.admin-btn-exit:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 650px) {
+    #admin-bar {
+        flex-direction: column;
+        padding: 1.5rem;
+        gap: 1.2rem;
+        bottom: 15px;
+    }
+    #admin-bar .admin-info {
+        font-size: 1rem;
+    }
+    #admin-bar .admin-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    .admin-btn {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+/* Modal Overlay */
+#admin-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 20000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#admin-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Modal Card */
+#admin-settings-modal {
+    background: #0b1120;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 24px;
+    width: 90%;
+    max-width: 520px;
+    padding: 2.2rem;
+    box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.8), 
+        0 0 40px rgba(0, 240, 255, 0.1);
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#admin-modal-overlay.active #admin-settings-modal {
+    transform: scale(1);
+}
+
+/* Modal Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 1rem;
+}
+
+.modal-header h3 {
+    font-family: var(--font-display);
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #fff;
+}
+
+/* Modal Form Groups */
+.modal-group {
+    margin-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.modal-group label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.modal-group input {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.85rem 1.1rem;
+    border-radius: 12px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+.modal-group input:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Modal Help Text */
+.modal-help {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.25);
+    padding: 0.9rem 1.1rem;
+    border-radius: 12px;
+    line-height: 1.5;
+    margin-bottom: 1.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.modal-help ol {
+    margin-left: 1.2rem;
+    margin-top: 0.4rem;
+}
+
+.modal-help a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.modal-help a:hover {
+    text-decoration: underline;
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* Pulse Loading Indicator */
+.loading-spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
