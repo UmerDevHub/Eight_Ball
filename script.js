@@ -91,8 +91,18 @@ document.addEventListener('DOMContentLoaded', () => {
         return btoa(unescape(encodeURIComponent(str)));
     };
 
-    // 1. Load saved prices from localStorage on page load
+    // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
+        const CURRENT_VERSION = 'v3.0'; // Incremented to force-clear old corrupt cache
+        const savedVersion = localStorage.getItem('prices_version');
+
+        if (savedVersion !== CURRENT_VERSION) {
+            localStorage.removeItem('saved_prices');
+            localStorage.setItem('prices_version', CURRENT_VERSION);
+            console.log('Layout changed: Cleared old price cache.');
+            return; // Stop here, let the fresh HTML prices load!
+        }
+
         const savedPrices = JSON.parse(localStorage.getItem('saved_prices') || '{}');
         editableElements.forEach((el, index) => {
             if (savedPrices[index] !== undefined) {
