@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="admin-actions">
                 <button class="admin-btn admin-btn-save admin-publish-btn"><i class="fa-solid fa-bolt"></i> Publish Live</button>
                 <button class="admin-btn admin-btn-exit admin-settings-btn"><i class="fa-solid fa-cog"></i> Settings</button>
+                <button class="admin-btn admin-btn-exit admin-reset-btn" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444;"><i class="fa-solid fa-rotate-left"></i> Reset Defaults</button>
                 <button class="admin-btn admin-btn-exit admin-download-btn"><i class="fa-solid fa-download"></i> Download HTML</button>
                 <button class="admin-btn admin-btn-exit admin-close-btn">Exit</button>
             </div>
@@ -152,6 +153,13 @@ document.addEventListener('DOMContentLoaded', () => {
         adminBar.querySelector('.admin-download-btn').addEventListener('click', saveAndDownloadHTML);
         adminBar.querySelector('.admin-settings-btn').addEventListener('click', openSettingsModal);
         adminBar.querySelector('.admin-publish-btn').addEventListener('click', publishToGitHubVercel);
+        adminBar.querySelector('.admin-reset-btn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to reset all prices to the default HTML values? This will clear all local browser edits.')) {
+                localStorage.removeItem('saved_prices');
+                alert('Saved prices cleared! Reloading page...');
+                location.reload();
+            }
+        });
 
         alert('Success! Admin Mode Activated.\n\nClick on any highlighted price, account number, or contact detail and type your changes directly on the screen.');
     };
