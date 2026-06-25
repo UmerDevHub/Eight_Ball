@@ -1146,3 +1146,67 @@ body.admin-mode .price-editable:focus {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* ==========================================
+   COMPACT PRICING TABLES
+   ========================================== */
+.compact-price-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.8rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.compact-price-table th, .compact-price-table td {
+    padding: 0.45rem 0.6rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.compact-price-table th {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    font-weight: 800;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.compact-price-table td {
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.compact-price-table tr:last-child td {
+    border-bottom: none;
+}
+
+.compact-price-table tr:hover td {
+    background: var(--bg-tertiary);
+}
+
+/* Light highlight for best-selling rows */
+.compact-price-table tr.row-highlight td {
+    background: rgba(37, 99, 235, 0.05);
+    color: var(--primary);
+}
+
+.compact-price-table tr.row-highlight td:first-child {
+    border-left: 3px solid var(--primary);
+}
+
+/* Beautiful color text for flags inside tables */
+.pkr-text {
+    color: #047857 !important; /* dark emerald */
+    font-weight: 800;
+}
+
+.inr-text {
+    color: #1d4ed8 !important; /* dark blue */
+    font-weight: 800;
+}

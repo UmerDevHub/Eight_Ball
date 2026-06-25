@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v4.2'; // Incremented to force-clear cache for live TikTok player & VIP Cash labels
+        const CURRENT_VERSION = 'v4.3'; // Incremented to force-clear cache for beautiful compact pricing tables
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
