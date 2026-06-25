@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v4.0'; // Incremented to force-clear old cache for new Light Theme
+        const CURRENT_VERSION = 'v4.1'; // Incremented to force-clear cache for compact pricing & embedded videos
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {

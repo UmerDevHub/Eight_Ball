@@ -409,7 +409,7 @@ header {
 }
 
 .card-inner {
-    padding: 2.5rem;
+    padding: 1.6rem;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -419,7 +419,7 @@ header {
 .flex-row { 
     display: flex; 
     flex-direction: row; 
-    gap: 2.5rem; 
+    gap: 1.6rem; 
     justify-content: space-between; 
 }
 
@@ -435,7 +435,7 @@ header {
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
-    padding-left: 2.5rem; 
+    padding-left: 1.6rem; 
     border-left: 1px dashed var(--border-color); 
 }
 
@@ -522,9 +522,9 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.9rem 0;
+    padding: 0.5rem 0;
     border-bottom: 1px solid var(--border-color);
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .price-list li:last-child {
@@ -584,19 +584,41 @@ header {
 /* Highlighted Rows in Lists */
 .highlight-row {
     background: var(--bg-secondary) !important;
-    padding: 0.9rem 1.2rem !important;
-    margin: 0 -1.2rem;
+    padding: 0.5rem 0.8rem !important;
+    margin: 0 -0.8rem;
     border-radius: var(--radius-md);
     border-left: 4px solid var(--primary) !important;
     border-bottom: none !important;
 }
 
 .big-prices li {
-    padding: 1.1rem 0;
+    padding: 0.65rem 0;
 }
 
 .minimal li {
-    padding: 0.6rem 0;
+    padding: 0.4rem 0;
+}
+
+/* Video Wrapper for Embedded Video Player */
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    height: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    margin-top: 1rem;
+    background: #0f172a; /* dark slate backdrop */
+}
+
+.video-wrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 .grid-2col {
