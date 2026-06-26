@@ -253,9 +253,11 @@ header {
 }
 
 @media (max-width: 768px) {
-    .hero h1 { font-size: 2.5rem; }
-    .hero p { font-size: 1.1rem; }
-    .hero-actions { flex-direction: column; width: 90%; margin: 0 auto; }
+    .hero { padding: 8rem 0 4rem 0; }
+    .hero h1 { font-size: clamp(2.2rem, 7vw, 2.8rem); letter-spacing: -1px; }
+    .hero p { font-size: 1.05rem; margin-bottom: 2rem; }
+    .hero-actions { flex-direction: column; width: 100%; max-width: 320px; margin: 0 auto; gap: 0.8rem; }
+    .hero-actions .btn { width: 100%; }
 }
 
 /* Buttons */
@@ -440,13 +442,28 @@ header {
 }
 
 @media (max-width: 768px) { 
-    .flex-row { flex-direction: column; } 
+    .flex-row { flex-direction: column; gap: 1.2rem; } 
     .card-price-half { 
         padding-left: 0; 
         border-left: none; 
         border-top: 1px dashed var(--border-color); 
-        padding-top: 2rem; 
+        padding-top: 1.2rem; 
     } 
+    .card-inner {
+        padding: 1.1rem;
+    }
+    .section {
+        padding: 3.5rem 0;
+    }
+    .section-header {
+        margin-bottom: 2rem;
+    }
+    .section-title {
+        font-size: 1.9rem;
+    }
+    .bento-grid {
+        gap: 1.2rem;
+    }
 }
 
 /* Card Headers */
@@ -740,24 +757,39 @@ header {
 /* Responsive VIP Table Styling for Mobile */
 @media (max-width: 768px) {
     .vip-table {
-        min-width: 820px; /* Safe minimum width to prevent columns squishing on mobile */
+        min-width: 780px; /* Safe minimum width to prevent columns squishing on mobile */
     }
     
     .vip-table th, .vip-table td {
-        padding: 0.8rem 0.6rem !important; /* Elegant compact padding on mobile viewports */
+        padding: 1.1rem 0.8rem !important; /* Extremely readable premium padding */
     }
     
     .vip-table td {
-        font-size: 0.9rem !important; /* Balanced font size for mobile screens */
+        font-size: 0.95rem !important; /* High readability on mobile */
     }
     
     .vip-table th {
-        font-size: 0.75rem !important;
+        font-size: 0.82rem !important;
     }
     
     .vip-table-container {
         border-radius: var(--radius-md);
-        margin-top: 1rem;
+        margin-top: 1.2rem;
+    }
+    
+    /* Payment Methods & Copy Box Mobile Optimization */
+    .pay-item {
+        padding: 1.2rem;
+        border-radius: var(--radius-md);
+    }
+    .payment-grid {
+        gap: 1.2rem;
+    }
+    .copy-box {
+        padding: 0.8rem 1rem;
+    }
+    .copy-box strong {
+        font-size: 1.15rem;
     }
 }
 
@@ -1347,16 +1379,88 @@ body.admin-mode .price-editable:focus {
 /* Responsive Table Scaling for Mobile Screens */
 @media (max-width: 768px) {
     .compact-price-table {
-        font-size: 0.80rem; /* Compact text size for small screens */
-        margin-top: 0.6rem;
+        font-size: 0.90rem; /* Highly readable font size on all mobiles! */
+        margin-top: 0.8rem;
     }
     
     .compact-price-table th, .compact-price-table td {
-        padding: 0.45rem 0.5rem; /* Tight padding to prevent overflow on mobile */
+        padding: 0.55rem 0.6rem; /* Clean readable padding */
     }
     
     .compact-price-table th {
-        font-size: 0.70rem; /* Highly legible and scale-appropriate headers */
+        font-size: 0.80rem; /* Elegant legibility for column headers */
+    }
+    
+    /* Adjust column widths on mobile for perfect balance and zero squeezing */
+    .compact-price-table th:first-child, .compact-price-table td:first-child {
+        width: 32%;
+    }
+    .compact-price-table th:nth-child(2), .compact-price-table td:nth-child(2),
+    .compact-price-table th:nth-child(3), .compact-price-table td:nth-child(3) {
+        width: 34%;
+    }
+}
+
+/* ==========================================
+   EXTRA MOBILE DEEP OPTIMIZATION (SCREENS < 480px)
+   ========================================== */
+@media (max-width: 480px) {
+    .container {
+        width: 94%; /* Slightly more width on tiny screens */
+    }
+    .hero {
+        padding: 7rem 0 3.5rem 0;
+    }
+    .hero-tag {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.9rem;
+        margin-bottom: 1.2rem;
+    }
+    .hero h1 {
+        font-size: 2.05rem;
+    }
+    .hero p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+    .section {
+        padding: 2.8rem 0;
+    }
+    .section-title {
+        font-size: 1.7rem;
+    }
+    .card-header {
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+    }
+    .card-header h3 {
+        font-size: 1.15rem;
+    }
+    .icon-box {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+    .card-inner {
+        padding: 0.9rem;
+    }
+    .desc-text {
+        font-size: 0.88rem;
+    }
+    .compact-price-table {
+        font-size: 0.85rem; /* Balanced size for tiny screens like iPhone SE */
+    }
+    .compact-price-table th {
+        font-size: 0.75rem;
+    }
+    .copy-box strong {
+        font-size: 1.05rem; /* Prevents overflow of long bank account numbers */
+    }
+    .logo {
+        font-size: 1.35rem;
+    }
+    .navbar {
+        padding: 0.9rem 0;
     }
 }
 
