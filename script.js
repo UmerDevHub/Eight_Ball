@@ -112,7 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // PREMIUM ON-PAGE VISUAL ADMIN MODE
     // ==========================================
-    const ADMIN_PASSWORD = 'admin123'; // Change your password here!
+    const getAdminPassword = () => {
+        const meta = document.getElementById('admin-pwd-meta');
+        return meta ? meta.getAttribute('content') : 'admin123';
+    };
     const editableElements = document.querySelectorAll('.price-editable');
 
     // Helper: Safely encode string to Base64 (supports UTF-8 characters)
@@ -408,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const password = prompt('Enter Admin Password to Edit Website:');
         if (password === null) return; // User clicked cancel
-        if (password !== ADMIN_PASSWORD) {
+        if (password !== getAdminPassword()) {
             alert('Incorrect password! Access denied.');
             return;
         }
@@ -780,6 +783,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label>GitHub Access Token</label>
                     <input type="password" id="modal-gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" value="${ghToken}">
                 </div>
+                <div class="modal-group" style="margin-top: 1rem; border-top: 1px dashed var(--border-color); padding-top: 1rem;">
+                    <label style="color: var(--primary);">Admin Access Password</label>
+                    <input type="text" id="modal-admin-pwd" placeholder="e.g., admin123" value="${getAdminPassword()}">
+                </div>
                 <div class="modal-actions">
                     <button class="admin-btn admin-btn-exit modal-cancel-btn">Cancel</button>
                     <button class="admin-btn admin-btn-save modal-save-btn">Save Settings</button>
@@ -813,9 +820,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const repo = document.getElementById('modal-gh-repo').value.trim();
         const branch = document.getElementById('modal-gh-branch').value.trim() || 'main';
         const token = document.getElementById('modal-gh-token').value.trim();
+        const newPwd = document.getElementById('modal-admin-pwd').value.trim();
 
         if (!user || !repo || !token) {
             alert('Please fill in all fields to link your GitHub repository!');
+            return;
+        }
+
+        if (!newPwd) {
+            alert('Please enter a valid Admin Password!');
             return;
         }
 
@@ -824,7 +837,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('gh_branch', branch);
         localStorage.setItem('gh_token', token);
 
-        alert('Deploy settings saved! You can now click "⚡ Publish Live" to deploy instantly.');
+        // Update the password in the HTML meta tag
+        const meta = document.getElementById('admin-pwd-meta');
+        if (meta) {
+            meta.setAttribute('content', newPwd);
+        }
+
+        alert('Settings saved! Click "⚡ Publish Live" in the admin bar to save your new password permanently to Vercel.');
         closeSettingsModal();
     };
 
