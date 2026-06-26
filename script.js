@@ -79,6 +79,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Initialize click-to-play video placeholders for ultra-fast loading speed!
+    const initVideoPlaceholders = () => {
+        document.querySelectorAll('.video-placeholder').forEach(placeholder => {
+            placeholder.addEventListener('click', function() {
+                const type = this.dataset.videoType;
+                const id = this.dataset.videoId;
+                let iframeSrc = '';
+                
+                if (type === 'youtube') {
+                    iframeSrc = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+                } else if (type === 'tiktok') {
+                    iframeSrc = `https://www.tiktok.com/embed/v2/${id}?autoplay=1`;
+                }
+                
+                if (iframeSrc) {
+                    const iframe = document.createElement('iframe');
+                    iframe.setAttribute('src', iframeSrc);
+                    iframe.setAttribute('allowfullscreen', 'true');
+                    iframe.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+                    
+                    this.innerHTML = '';
+                    this.appendChild(iframe);
+                }
+            });
+        });
+    };
+    initVideoPlaceholders();
+
     // Note: VanillaTilt is initialized automatically on elements with data-tilt via the CDN script in index.html
 
     // ==========================================
@@ -94,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v4.7'; // Incremented to force-clear cache for table subheadings and zero-overlap layout
+        const CURRENT_VERSION = 'v4.8'; // Incremented to force-clear cache for click-to-play videos & zero-overlap tables
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
