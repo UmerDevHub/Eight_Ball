@@ -125,91 +125,75 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper to make an element editable with proper event handlers
     const makeElementEditable = (el) => {
         el.setAttribute('contenteditable', 'true');
+        // Prevent click navigation on editable texts
         el.addEventListener('click', preventDefaultClick);
+        // Prevent Enter key from creating new lines in editable fields
         el.addEventListener('keydown', preventEnterKey);
     };
 
-    // 2. Function to enter Admin Mode
-    let isAdminActive = false;
-    const enterAdminMode = () => {
-        if (isAdminActive) return;
-
-        const password = prompt('Enter Admin Password to Edit Website:');
-        if (password === null) return; // User clicked cancel
-        if (password !== ADMIN_PASSWORD) {
-            alert('Incorrect password! Access denied.');
-            return;
-        }
-
-        isAdminActive = true;
-        document.body.classList.add('admin-mode');
-
-        // Dynamically find and make ALL text elements on the page editable
-        const selectors = 'h1, h2, h3, h4, h5, h6, p, .btn, td, th, .hero-tag, .copy-box strong, .profile-badge, .profile-status';
-        document.querySelectorAll(selectors).forEach(el => {
-            // Exclude admin-specific control bar elements
-            if (!el.closest('#admin-bar') && !el.closest('#admin-settings-modal') && !el.closest('#admin-modal-overlay')) {
-                el.classList.add('price-editable');
-                makeElementEditable(el);
-            }
+    // Helper to set up full, comprehensive CRUD and text editability inside any card
+    const setupCardInteractivity = (card) => {
+        // 1. Make all text elements inside this card editable
+        const textSelectors = 'h1, h2, h3, h4, h5, h6, p, .btn, td, th, .hero-tag, .copy-box strong, .profile-badge, .profile-status, .card-dl-btn';
+        card.querySelectorAll(textSelectors).forEach(el => {
+            el.classList.add('price-editable');
+            makeElementEditable(el);
         });
 
-        // Bind double-click link editor to all <a> tags for quick link editing
-        document.querySelectorAll('a').forEach(link => {
-            if (link.closest('#admin-bar') || link.closest('#admin-settings-modal') || link.closest('#admin-modal-overlay')) return;
-            
-            // Show a prompt to edit the href link URL
+        // 2. Bind double-click link editor to all <a> tags inside this card
+        card.querySelectorAll('a').forEach(link => {
             link.addEventListener('dblclick', (e) => {
                 if (!isAdminActive) return;
                 e.preventDefault();
                 e.stopPropagation();
                 const currentUrl = link.getAttribute('href') || '';
-                const newUrl = prompt(`Enter new Link URL for "${link.innerText.trim()}":\n(e.g., https://wa.me/923349013513)`, currentUrl);
+                const newUrl = prompt(`Enter new URL Link for "${link.innerText.trim()}":\n(e.g., https://wa.me/923349013513)`, currentUrl);
                 if (newUrl !== null) {
                     link.setAttribute('href', newUrl);
-                    alert('Link URL updated successfully! This change is now part of the page.');
+                    alert('Link URL updated successfully!');
                 }
             });
         });
 
-        // Bind double-click video ID editor to all video placeholders
-        document.querySelectorAll('.video-placeholder').forEach(video => {
+        // 3. Bind double-click video ID editor to all video placeholders inside this card
+        card.querySelectorAll('.video-placeholder').forEach(video => {
             video.addEventListener('dblclick', (e) => {
                 if (!isAdminActive) return;
                 e.preventDefault();
                 e.stopPropagation();
                 const currentId = video.getAttribute('data-video-id') || '';
-                const newId = prompt(`Enter new YouTube/TikTok Video ID for this video:\n(e.g., ihnsR1blhug)`, currentId);
+                const newId = prompt(`Enter new YouTube/TikTok Video ID for this card:\n(e.g., ihnsR1blhug)`, currentId);
                 if (newId !== null) {
                     video.setAttribute('data-video-id', newId);
                     const img = video.querySelector('img');
                     if (img) {
                         img.src = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
                     }
-                    alert('Video ID updated successfully! Click to play your new video.');
+                    alert('Video ID updated successfully!');
                 }
             });
         });
 
-        // Inject delete buttons to all existing table rows (skip headers containing TH)
-        document.querySelectorAll('.compact-price-table tr').forEach(row => {
-            if (row.querySelector('th')) return; // Skip header row
-            if (!row.querySelector('.admin-delete-row-btn')) {
-                const delBtn = document.createElement('button');
-                delBtn.className = 'admin-delete-row-btn';
-                delBtn.setAttribute('title', 'Delete Row');
-                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-                delBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    row.remove();
-                });
-                row.appendChild(delBtn);
-            }
-        });
+        // 4. Set up all pricing tables inside this card
+        card.querySelectorAll('.compact-price-table').forEach(table => {
+            // Prepend delete buttons to all existing rows (excluding headers)
+            table.querySelectorAll('tr').forEach(row => {
+                if (row.querySelector('th')) return; // Skip header row
+                if (!row.querySelector('.admin-delete-row-btn')) {
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'admin-delete-row-btn';
+                    delBtn.setAttribute('title', 'Delete Row');
+                    delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                    delBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        row.remove();
+                    });
+                    row.appendChild(delBtn);
+                }
+            });
 
-        // Inject "Add Row" button below each table
-        document.querySelectorAll('.compact-price-table').forEach(table => {
+            // Append "Add Row" button below the table
             let addBtn = table.nextElementSibling;
             if (!addBtn || !addBtn.classList.contains('admin-add-row-btn')) {
                 addBtn = document.createElement('div');
@@ -227,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Make new cells editable
                     newRow.querySelectorAll('.price-editable').forEach(cell => makeElementEditable(cell));
                     
-                    // Inject delete button to the new row
+                    // Prepend delete button to the new row
                     const delBtn = document.createElement('button');
                     delBtn.className = 'admin-delete-row-btn';
                     delBtn.setAttribute('title', 'Delete Row');
@@ -245,23 +229,131 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Inject delete buttons to all existing payment cards
-        document.querySelectorAll('.pay-item').forEach(card => {
-            if (!card.querySelector('.admin-delete-card-btn')) {
-                const delBtn = document.createElement('button');
-                delBtn.className = 'admin-delete-card-btn';
-                delBtn.setAttribute('title', 'Delete Payment Method');
-                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-                delBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
+        // 5. Inject a global hovering delete button in the top-right of this card
+        if (!card.querySelector('.admin-delete-card-global-btn')) {
+            const delBtn = document.createElement('button');
+            delBtn.className = 'admin-delete-card-global-btn';
+            delBtn.setAttribute('title', 'Delete Offer Card');
+            delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+            delBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (confirm('Are you sure you want to delete this entire offer card? This will remove all its text and tables.')) {
                     card.remove();
+                }
+            });
+            card.appendChild(delBtn);
+        }
+    };
+
+    // 2. Function to enter Admin Mode
+    let isAdminActive = false;
+    const enterAdminMode = () => {
+        if (isAdminActive) return;
+
+        const password = prompt('Enter Admin Password to Edit Website:');
+        if (password === null) return; // User clicked cancel
+        if (password !== ADMIN_PASSWORD) {
+            alert('Incorrect password! Access denied.');
+            return;
+        }
+
+        isAdminActive = true;
+        document.body.classList.add('admin-mode');
+
+        // Make the Hero section texts and navbar logo editable (since they are outside cards)
+        const globalSelectors = '.hero-content h1, .hero-content p, .hero-tag, .logo, .nav-links a, footer p';
+        document.querySelectorAll(globalSelectors).forEach(el => {
+            el.classList.add('price-editable');
+            makeElementEditable(el);
+        });
+
+        // Bind double-click link editing to all header/footer links
+        document.querySelectorAll('header a, footer a').forEach(link => {
+            if (link.closest('#admin-bar') || link.closest('#admin-settings-modal')) return;
+            link.addEventListener('dblclick', (e) => {
+                if (!isAdminActive) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const currentUrl = link.getAttribute('href') || '';
+                const newUrl = prompt(`Enter new URL Link for "${link.innerText.trim()}":`, currentUrl);
+                if (newUrl !== null) {
+                    link.setAttribute('href', newUrl);
+                    alert('Link URL updated successfully!');
+                }
+            });
+        });
+
+        // Make all existing bento offer cards fully interactive (edit texts, links, tables, delete card)
+        document.querySelectorAll('.card').forEach(card => {
+            setupCardInteractivity(card);
+        });
+
+        // Inject "Add New Offer Card" button to all bento grids (except payment-grid)
+        document.querySelectorAll('.bento-grid').forEach(grid => {
+            if (grid.classList.contains('payment-grid')) return; // Skip payment grid (has its own card add logic)
+            
+            let addCardBtn = grid.querySelector('.admin-add-card-btn');
+            if (!addCardBtn) {
+                addCardBtn = document.createElement('div');
+                addCardBtn.className = 'admin-add-card-btn';
+                addCardBtn.innerHTML = `
+                    <i class="fa-solid fa-plus-circle"></i>
+                    <span>Add New Offer Card</span>
+                `;
+                addCardBtn.addEventListener('click', () => {
+                    const newCard = document.createElement('div');
+                    newCard.className = 'card bento-card';
+                    newCard.innerHTML = `
+                        <div class="card-inner">
+                            <div class="card-header">
+                                <div class="icon-box bg-cyan-10">
+                                    <i class="fa-solid fa-gem"></i>
+                                </div>
+                                <div>
+                                    <h3>New Premium Deal</h3>
+                                    <span class="badge badge-outline">New Package</span>
+                                </div>
+                            </div>
+                            <p class="desc-text">This is your new package description. Click here to edit and customize this text!</p>
+                            
+                            <table class="compact-price-table">
+                                <thead>
+                                    <tr>
+                                        <th>Duration</th>
+                                        <th class="pkr-text">🇵🇰<br>PKR (₨)</th>
+                                        <th class="inr-text">🇮🇳<br>INR (₹)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>7 Days</td>
+                                        <td class="pkr-text"><strong class="price-editable">1,000</strong></td>
+                                        <td class="inr-text"><strong class="price-editable">300</strong></td>
+                                    </tr>
+                                    <tr class="row-highlight">
+                                        <td>30 Days</td>
+                                        <td class="pkr-text"><strong class="price-editable">3,000</strong></td>
+                                        <td class="inr-text"><strong class="price-editable">900</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <a href="#" target="_blank" class="card-dl-btn" style="margin-top: 1rem;"><i class="fa-solid fa-download"></i> Download Link</a>
+                        </div>
+                    `;
+                    
+                    // Set up all editability, table tools, double-click links, and deletion on the new card
+                    setupCardInteractivity(newCard);
+                    
+                    // Insert the new card in the grid right before the "Add Card" button
+                    grid.insertBefore(newCard, addCardBtn);
                 });
-                card.appendChild(delBtn);
+                grid.appendChild(addCardBtn);
             }
         });
 
-        // Inject "Add Payment Method" card at the end of the payment grid
+        // Inject "Add Payment Method" card at the end of the payment grid (if not already present)
         const paymentGrid = document.querySelector('.payment-grid');
         if (paymentGrid) {
             let addCard = paymentGrid.querySelector('.admin-add-payment-card');
@@ -289,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Make new elements editable
                     newCard.querySelectorAll('.price-editable').forEach(el => makeElementEditable(el));
                     
-                    // Inject delete button for the new card
+                    // Inject delete button for the new payment card
                     const delBtn = document.createElement('button');
                     delBtn.className = 'admin-delete-card-btn';
                     delBtn.setAttribute('title', 'Delete Payment Method');
@@ -340,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        alert('Success! Admin Mode Activated.\n\nClick on any text, heading, or button on the screen and type your changes directly!\n\n💡 Double-click any link or button to edit its URL.\n🎬 Double-click any video card to change the Video ID.\n➕ Use the "Add New Row" and "Add Payment Method" buttons to add items!\n🗑️ Hover over items and click the red trash icon to delete them.');
+        alert('Success! Admin Mode Activated.\n\n✨ Click & Edit: Click any text, heading, or button to type changes.\n🔗 Edit Links: Double-click any link or button to change its URL.\n🎬 Edit Videos: Double-click video cards to change the YouTube ID.\n➕ Add Items: Click the "+ Add New Offer Card" or "+ Add New Row" buttons.\n🗑️ Delete Items: Hover over cards or rows and click the red trash can!');
     };
 
     const preventDefaultClick = (e) => {
@@ -372,6 +464,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-delete-row-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-payment-card').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-card-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-card-global-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-card-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) {
@@ -398,6 +492,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-delete-row-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-payment-card').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-card-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-card-global-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-card-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) adminBar.remove();
