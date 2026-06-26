@@ -494,51 +494,105 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Inject "Add Payment Method" card at the end of the payment grid (if not already present)
-        const paymentGrid = document.querySelector('.payment-grid');
-        if (paymentGrid) {
-            let addCard = paymentGrid.querySelector('.admin-add-payment-card');
-            if (!addCard) {
-                addCard = document.createElement('div');
-                addCard.className = 'admin-add-payment-card';
-                addCard.innerHTML = `
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add Payment Method</span>
-                `;
-                addCard.addEventListener('click', () => {
-                    const newCard = document.createElement('div');
-                    newCard.className = 'pay-item';
-                    newCard.innerHTML = `
-                        <h4 class="price-editable">New Bank Account</h4>
-                        <div class="copy-box" title="Click to copy account details">
-                            <strong class="price-editable">000000000000</strong>
-                            <button class="btn-copy" aria-label="Copy account details"><i class="fa-regular fa-copy"></i></button>
-                        </div>
-                        <p class="text-sm mt-2" style="margin-top: 0.5rem; color:var(--text-muted);">
-                            Account Holder: <strong style="color:var(--text-main);" class="price-editable">Holder Name</strong>
-                        </p>
-                    `;
-                    
-                    // Make new elements editable
-                    newCard.querySelectorAll('.price-editable').forEach(el => makeElementEditable(el));
-                    
-                    // Inject delete button for the new payment card
-                    const delBtn = document.createElement('button');
-                    delBtn.className = 'admin-delete-card-btn';
-                    delBtn.setAttribute('title', 'Delete Payment Method');
-                    delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
-                    delBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        newCard.remove();
-                    });
-                    newCard.appendChild(delBtn);
-                    
-                    paymentGrid.insertBefore(newCard, addCard);
+        // 3-Column Payment CRUD Engine (Create, Update, Delete for all payment categories)
+        const setupPaymentDeleteButtons = (payItem) => {
+            if (!payItem.querySelector('.admin-delete-pay-item-btn')) {
+                const delBtn = document.createElement('button');
+                delBtn.className = 'admin-delete-pay-item-btn';
+                delBtn.setAttribute('title', 'Delete Payment Method');
+                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                delBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (confirm('Are you sure you want to delete this payment method?')) {
+                        payItem.remove();
+                    }
                 });
-                paymentGrid.appendChild(addCard);
+                payItem.style.position = 'relative'; // Anchor absolute trash button
+                payItem.appendChild(delBtn);
             }
-        }
+        };
+
+        document.querySelectorAll('.payment-category-column').forEach(column => {
+            // Setup delete buttons for all existing payment items in this column
+            column.querySelectorAll('.pay-item').forEach(item => {
+                setupPaymentDeleteButtons(item);
+            });
+
+            // Inject "Add Payment Method" button at the bottom of the column if not already present
+            let addBtn = column.querySelector('.admin-add-pay-item-btn');
+            if (!addBtn) {
+                addBtn = document.createElement('button');
+                addBtn.className = 'admin-add-pay-item-btn';
+                addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Payment Method';
+                addBtn.addEventListener('click', () => {
+                    const title = prompt('💳 Enter Payment Method Title:\n(e.g., JazzCash, Meezan Bank, USDT TRC20)');
+                    if (!title) return;
+
+                    const value = prompt('🔢 Enter Account Number / ID / Wallet Address:\n(e.g., 03249906293)');
+                    if (!value) return;
+
+                    const holder = prompt('👤 Enter Account Holder Name (Optional):\n(e.g., Farhan Ullah)');
+                    const value2 = prompt('🔑 Enter Second Number / IBAN (Optional):\n(Leave blank if none)');
+                    const branch = prompt('🏦 Enter Bank Branch Name (Optional):\n(Leave blank if none)');
+
+                    // Create the new pay-item
+                    const newItem = document.createElement('div');
+                    newItem.className = 'pay-item';
+                    newItem.style.border = 'none';
+                    newItem.style.padding = '0';
+                    newItem.style.background = 'none';
+                    newItem.style.marginTop = '0.8rem';
+                    newItem.style.borderTop = '1px dashed var(--border-color)';
+                    newItem.style.paddingTop = '0.8rem';
+
+                    let html = `
+                        <h5 class="price-editable">${title}</h5>
+                        <div class="copy-box" title="Click to copy" style="margin-bottom: 0.4rem;">
+                            <strong class="price-editable">${value}</strong>
+                            <button class="btn-copy" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    `;
+
+                    if (value2) {
+                        html += `
+                            <div class="copy-box iban-box" title="Click to copy" style="margin-bottom: 0.4rem;">
+                                <strong class="price-editable">${value2}</strong>
+                                <button class="btn-copy" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
+                            </div>
+                        `;
+                    }
+
+                    if (holder || branch) {
+                        let holderHtml = holder ? `Holder: <strong style="color:var(--text-main);" class="price-editable">${holder}</strong>` : '';
+                        let branchHtml = branch ? `Branch: <span class="price-editable">${branch}</span>` : '';
+                        let separator = (holder && branch) ? '<br>' : '';
+                        html += `
+                            <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left;">
+                                ${holderHtml}
+                                ${separator}
+                                ${branchHtml}
+                            </p>
+                        `;
+                    }
+
+                    newItem.innerHTML = html;
+
+                    // Make all texts inside the new payment method editable
+                    newItem.querySelectorAll('.price-editable').forEach(el => {
+                        makeElementEditable(el);
+                    });
+
+                    // Setup the delete button for this new payment item
+                    setupPaymentDeleteButtons(newItem);
+
+                    // Insert the new item right before the add button
+                    column.insertBefore(newItem, addBtn);
+                });
+
+                column.appendChild(addBtn);
+            }
+        });
 
         // Create the beautiful glassmorphic Admin Control Bar
         const adminBar = document.createElement('div');
