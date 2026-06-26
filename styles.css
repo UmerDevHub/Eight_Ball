@@ -212,8 +212,22 @@ header {
 /* Hero Section */
 .hero {
     padding: 10rem 0 5rem 0;
-    text-align: center;
     background: radial-gradient(circle at top, rgba(37, 99, 235, 0.05) 0%, transparent 70%);
+}
+
+/* Hero Grid Layout */
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4rem;
+    align-items: center;
+    text-align: left;
+}
+
+.hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .hero-tag {
@@ -237,27 +251,123 @@ header {
     line-height: 1.15;
     letter-spacing: -2px;
     margin-bottom: 1.5rem;
+    text-align: left;
 }
 
 .hero p {
     font-size: 1.25rem;
-    max-width: 620px;
-    margin: 0 auto 2.5rem auto;
+    margin: 0 0 2.5rem 0;
     color: var(--text-muted);
+    text-align: left;
 }
 
 .hero-actions {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 1.2rem;
+    width: 100%;
+}
+
+/* Hero Image Card Styling */
+.hero-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.hero-image-card {
+    position: relative;
+    width: 320px;
+    height: 320px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 3px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px var(--primary-glow);
+    background: var(--bg-secondary);
+    transition: all 0.4s var(--ease-out-expo);
+}
+
+.hero-image-card:hover {
+    transform: translateY(-8px) rotate(2deg);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 60px var(--fuchsia-glow);
+    border-color: rgba(192, 38, 211, 0.3);
+}
+
+.hero-profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease-out-expo);
+}
+
+.hero-image-card:hover .hero-profile-img {
+    transform: scale(1.05);
+}
+
+/* Floating Badge on Profile */
+.hero-image-badge {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(234, 88, 12, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+/* Responsive Hero Adjustments */
+@media (max-width: 992px) {
+    .hero {
+        padding: 8rem 0 4rem 0;
+    }
+    .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+    }
+    .hero-content {
+        align-items: center;
+    }
+    .hero h1 {
+        font-size: clamp(2.4rem, 6vw, 3.2rem);
+        text-align: center;
+    }
+    .hero p {
+        font-size: 1.1rem;
+        text-align: center;
+        margin: 0 auto 2rem auto;
+        max-width: 600px;
+    }
+    .hero-actions {
+        justify-content: center;
+    }
+    .hero-image-card {
+        width: 280px;
+        height: 280px;
+    }
 }
 
 @media (max-width: 768px) {
-    .hero { padding: 8rem 0 4rem 0; }
-    .hero h1 { font-size: clamp(2.2rem, 7vw, 2.8rem); letter-spacing: -1px; }
-    .hero p { font-size: 1.05rem; margin-bottom: 2rem; }
-    .hero-actions { flex-direction: column; width: 100%; max-width: 320px; margin: 0 auto; gap: 0.8rem; }
-    .hero-actions .btn { width: 100%; }
+    .hero-actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 320px;
+        margin: 0 auto;
+        gap: 0.8rem;
+    }
+    .hero-actions .btn {
+        width: 100%;
+    }
 }
 
 /* Buttons */
