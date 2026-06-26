@@ -44,38 +44,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Copy to clipboard functionality for payment methods
-    const copyElements = document.querySelectorAll('.copy-box');
-    
-    copyElements.forEach(el => {
-        el.addEventListener('click', () => {
-            if (isAdminActive) return; // Prevent copy overlay while editing in Admin Mode!
-            const textToCopy = el.querySelector('strong').innerText;
-            const button = el.querySelector('.btn-copy');
-            const icon = button.querySelector('i');
+    // Copy to clipboard functionality for payment methods (using Event Delegation to support dynamically added items!)
+    document.addEventListener('click', (e) => {
+        const el = e.target.closest('.copy-box');
+        if (!el) return;
+        
+        if (isAdminActive) return; // Prevent copy overlay while editing in Admin Mode!
+        
+        const strong = el.querySelector('strong');
+        if (!strong) return;
+        const textToCopy = strong.innerText;
+        
+        const button = el.querySelector('.btn-copy');
+        const icon = button ? button.querySelector('i') : null;
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalBg = el.style.background || '';
+            const originalBorder = el.style.borderColor || '';
+            let originalClass = '';
+            let originalColor = '';
             
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                const originalClass = icon.className;
-                const originalBg = el.style.background;
-                const originalBorder = el.style.borderColor;
-                const originalColor = icon.style.color;
-                
-                // Change to success state
+            if (icon) {
+                originalClass = icon.className;
+                originalColor = icon.style.color || '';
                 icon.className = 'fa-solid fa-check';
                 icon.style.color = '#10b981'; // emerald
-                el.style.borderColor = 'rgba(16, 185, 129, 0.5)';
-                el.style.background = 'rgba(16, 185, 129, 0.1)';
-                
-                // Revert back after 2 seconds
-                setTimeout(() => {
+            }
+            
+            el.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+            el.style.background = 'rgba(16, 185, 129, 0.1)';
+            
+            // Revert back after 2 seconds
+            setTimeout(() => {
+                if (icon) {
                     icon.className = originalClass;
                     icon.style.color = originalColor;
-                    el.style.borderColor = originalBorder;
-                    el.style.background = originalBg;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy text: ', err);
-            });
+                }
+                el.style.borderColor = originalBorder;
+                el.style.background = originalBg;
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
         });
     });
 
@@ -666,6 +675,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-add-card-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-image-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-image-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-pay-item-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-pay-item-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) {
@@ -696,6 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-add-card-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-image-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-image-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-pay-item-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-pay-item-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) adminBar.remove();
