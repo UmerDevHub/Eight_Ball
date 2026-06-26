@@ -213,6 +213,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper to make an element editable with proper event handlers
     const makeElementEditable = (el) => {
+        // Safety: Never make admin buttons or admin interface controls editable!
+        if (el.closest('[class*="admin-"]') || el.classList.contains('admin-add-pay-item-btn') || el.classList.contains('admin-delete-pay-item-btn')) {
+            return;
+        }
         el.setAttribute('contenteditable', 'true');
         // Prevent click navigation on editable texts
         el.addEventListener('click', preventDefaultClick);
@@ -537,73 +541,78 @@ document.addEventListener('DOMContentLoaded', () => {
                 addBtn = document.createElement('button');
                 addBtn.className = 'admin-add-pay-item-btn';
                 addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add Payment Method';
-                addBtn.addEventListener('click', () => {
-                    const title = prompt('💳 Enter Payment Method Title:\n(e.g., JazzCash, Meezan Bank, USDT TRC20)');
-                    if (!title) return;
+                column.appendChild(addBtn);
+            }
 
-                    const value = prompt('🔢 Enter Account Number / ID / Wallet Address:\n(e.g., 03249906293)');
-                    if (!value) return;
+            // ALWAYS clone the button and replace it to clear any old/dead event listeners
+            const newAddBtn = addBtn.cloneNode(true);
+            addBtn.parentNode.replaceChild(newAddBtn, addBtn);
+            addBtn = newAddBtn;
 
-                    const holder = prompt('👤 Enter Account Holder Name (Optional):\n(e.g., Farhan Ullah)');
-                    const value2 = prompt('🔑 Enter Second Number / IBAN (Optional):\n(Leave blank if none)');
-                    const branch = prompt('🏦 Enter Bank Branch Name (Optional):\n(Leave blank if none)');
+            addBtn.addEventListener('click', () => {
+                const title = prompt('💳 Enter Payment Method Title:\n(e.g., JazzCash, Meezan Bank, USDT TRC20)');
+                if (!title) return;
 
-                    // Create the new pay-item
-                    const newItem = document.createElement('div');
-                    newItem.className = 'pay-item';
-                    newItem.style.border = 'none';
-                    newItem.style.padding = '0';
-                    newItem.style.background = 'none';
-                    newItem.style.marginTop = '0.8rem';
-                    newItem.style.borderTop = '1px dashed var(--border-color)';
-                    newItem.style.paddingTop = '0.8rem';
+                const value = prompt('🔢 Enter Account Number / ID / Wallet Address:\n(e.g., 03249906293)');
+                if (!value) return;
 
-                    let html = `
-                        <h5 class="price-editable">${title}</h5>
-                        <div class="copy-box" title="Click to copy" style="margin-bottom: 0.4rem;">
-                            <strong class="price-editable">${value}</strong>
+                const holder = prompt('👤 Enter Account Holder Name (Optional):\n(e.g., Farhan Ullah)');
+                const value2 = prompt('🔑 Enter Second Number / IBAN (Optional):\n(Leave blank if none)');
+                const branch = prompt('🏦 Enter Bank Branch Name (Optional):\n(Leave blank if none)');
+
+                // Create the new pay-item
+                const newItem = document.createElement('div');
+                newItem.className = 'pay-item';
+                newItem.style.border = 'none';
+                newItem.style.padding = '0';
+                newItem.style.background = 'none';
+                newItem.style.marginTop = '0.8rem';
+                newItem.style.borderTop = '1px dashed var(--border-color)';
+                newItem.style.paddingTop = '0.8rem';
+
+                let html = `
+                    <h5 class="price-editable">${title}</h5>
+                    <div class="copy-box" title="Click to copy" style="margin-bottom: 0.4rem;">
+                        <strong class="price-editable">${value}</strong>
+                        <button class="btn-copy" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                `;
+
+                if (value2) {
+                    html += `
+                        <div class="copy-box iban-box" title="Click to copy" style="margin-bottom: 0.4rem;">
+                            <strong class="price-editable">${value2}</strong>
                             <button class="btn-copy" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
                         </div>
                     `;
+                }
 
-                    if (value2) {
-                        html += `
-                            <div class="copy-box iban-box" title="Click to copy" style="margin-bottom: 0.4rem;">
-                                <strong class="price-editable">${value2}</strong>
-                                <button class="btn-copy" aria-label="Copy"><i class="fa-regular fa-copy"></i></button>
-                            </div>
-                        `;
-                    }
+                if (holder || branch) {
+                    let holderHtml = holder ? `Holder: <strong style="color:var(--text-main);" class="price-editable">${holder}</strong>` : '';
+                    let branchHtml = branch ? `Branch: <span class="price-editable">${branch}</span>` : '';
+                    let separator = (holder && branch) ? '<br>' : '';
+                    html += `
+                        <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left;">
+                            ${holderHtml}
+                            ${separator}
+                            ${branchHtml}
+                        </p>
+                    `;
+                }
 
-                    if (holder || branch) {
-                        let holderHtml = holder ? `Holder: <strong style="color:var(--text-main);" class="price-editable">${holder}</strong>` : '';
-                        let branchHtml = branch ? `Branch: <span class="price-editable">${branch}</span>` : '';
-                        let separator = (holder && branch) ? '<br>' : '';
-                        html += `
-                            <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left;">
-                                ${holderHtml}
-                                ${separator}
-                                ${branchHtml}
-                            </p>
-                        `;
-                    }
+                newItem.innerHTML = html;
 
-                    newItem.innerHTML = html;
-
-                    // Make all texts inside the new payment method editable
-                    newItem.querySelectorAll('.price-editable').forEach(el => {
-                        makeElementEditable(el);
-                    });
-
-                    // Setup the delete button for this new payment item
-                    setupPaymentDeleteButtons(newItem);
-
-                    // Insert the new item right before the add button
-                    column.insertBefore(newItem, addBtn);
+                // Make all texts inside the new payment method editable
+                newItem.querySelectorAll('.price-editable').forEach(el => {
+                    makeElementEditable(el);
                 });
 
-                column.appendChild(addBtn);
-            }
+                // Setup the delete button for this new payment item
+                setupPaymentDeleteButtons(newItem);
+
+                // Insert the new item right before the add button
+                column.insertBefore(newItem, addBtn);
+            });
         });
 
         // Create the beautiful glassmorphic Admin Control Bar
