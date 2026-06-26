@@ -140,39 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
             makeElementEditable(el);
         });
 
-        // 2. Bind double-click link editor to all <a> tags inside this card
-        card.querySelectorAll('a').forEach(link => {
-            link.addEventListener('dblclick', (e) => {
-                if (!isAdminActive) return;
-                e.preventDefault();
-                e.stopPropagation();
-                const currentUrl = link.getAttribute('href') || '';
-                const newUrl = prompt(`Enter new URL Link for "${link.innerText.trim()}":\n(e.g., https://wa.me/923349013513)`, currentUrl);
-                if (newUrl !== null) {
-                    link.setAttribute('href', newUrl);
-                    alert('Link URL updated successfully!');
-                }
-            });
-        });
-
-        // 3. Bind double-click video ID editor to all video placeholders inside this card
-        card.querySelectorAll('.video-placeholder').forEach(video => {
-            video.addEventListener('dblclick', (e) => {
-                if (!isAdminActive) return;
-                e.preventDefault();
-                e.stopPropagation();
-                const currentId = video.getAttribute('data-video-id') || '';
-                const newId = prompt(`Enter new YouTube/TikTok Video ID for this card:\n(e.g., ihnsR1blhug)`, currentId);
-                if (newId !== null) {
-                    video.setAttribute('data-video-id', newId);
-                    const img = video.querySelector('img');
-                    if (img) {
-                        img.src = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
-                    }
-                    alert('Video ID updated successfully!');
-                }
-            });
-        });
+        // Note: Links and Video clicks are handled globally in the capturing phase to prevent navigation and allow instant single-click editing.
 
         // 4. Set up all pricing tables inside this card
         card.querySelectorAll('.compact-price-table').forEach(table => {
@@ -272,21 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
             makeElementEditable(el);
         });
 
-        // Bind double-click link editing to all header/footer links
-        document.querySelectorAll('header a, footer a').forEach(link => {
-            if (link.closest('#admin-bar') || link.closest('#admin-settings-modal')) return;
-            link.addEventListener('dblclick', (e) => {
-                if (!isAdminActive) return;
-                e.preventDefault();
-                e.stopPropagation();
-                const currentUrl = link.getAttribute('href') || '';
-                const newUrl = prompt(`Enter new URL Link for "${link.innerText.trim()}":`, currentUrl);
-                if (newUrl !== null) {
-                    link.setAttribute('href', newUrl);
-                    alert('Link URL updated successfully!');
-                }
-            });
-        });
+        // Note: Header/footer links are handled by the global Admin click interceptor.
 
         // Make all existing bento offer cards fully interactive (edit texts, links, tables, delete card)
         document.querySelectorAll('.card').forEach(card => {
@@ -724,4 +678,48 @@ document.addEventListener('DOMContentLoaded', () => {
     if (adminTrigger) {
         adminTrigger.addEventListener('click', enterAdminMode);
     }
+
+    // Global click interceptor in capturing phase to edit links and videos in Admin Mode instantly via single-click
+    window.addEventListener('click', (e) => {
+        if (!isAdminActive) return;
+
+        // A. Intercept Links (<a> tags)
+        const link = e.target.closest('a');
+        if (link) {
+            // Do not intercept admin panel links, modal close, or settings buttons
+            if (link.closest('#admin-bar') || link.closest('#admin-settings-modal') || link.closest('#admin-modal-overlay')) {
+                return;
+            }
+            
+            e.preventDefault();
+            e.stopPropagation();
+
+            const currentUrl = link.getAttribute('href') || '';
+            const newUrl = prompt(`✏️ Edit Link URL:\n\nEnter new URL for "${link.innerText.trim()}":`, currentUrl);
+            if (newUrl !== null) {
+                link.setAttribute('href', newUrl);
+                alert('Link URL updated successfully!');
+            }
+            return;
+        }
+
+        // B. Intercept Videos (.video-placeholder)
+        const video = e.target.closest('.video-placeholder');
+        if (video) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const currentId = video.getAttribute('data-video-id') || '';
+            const newId = prompt(`🎬 Edit Video ID:\n\nEnter new YouTube or TikTok Video ID:`, currentId);
+            if (newId !== null) {
+                video.setAttribute('data-video-id', newId);
+                const img = video.querySelector('img');
+                if (img) {
+                    img.src = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
+                }
+                alert('Video ID updated successfully!');
+            }
+            return;
+        }
+    }, true); // Capturing phase ensures we block the link from opening and intercept the click first!
 });

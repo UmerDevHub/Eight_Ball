@@ -1944,7 +1944,7 @@ body.admin-mode a:hover, body.admin-mode .video-placeholder:hover {
 
 /* Tooltip helper for Admin Mode link editing */
 body.admin-mode a::after {
-    content: " 💡 Double-click to edit Link URL" !important;
+    content: " ✏️ Click to Edit Link URL" !important;
     display: none;
     position: absolute;
     bottom: -30px;
@@ -1968,7 +1968,7 @@ body.admin-mode a:hover::after {
 
 /* Tooltip helper for video editing */
 body.admin-mode .video-placeholder::after {
-    content: " 🎬 Double-click to change YouTube Video ID" !important;
+    content: " 🎬 Click to Edit YouTube/TikTok Video ID" !important;
     display: none;
     position: absolute;
     bottom: 15px;
