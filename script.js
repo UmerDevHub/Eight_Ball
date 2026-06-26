@@ -302,8 +302,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (modalOverlay) return;
 
         // Load current config
-        const ghUser = localStorage.getItem('gh_username') || '';
-        const ghRepo = localStorage.getItem('gh_repo') || '';
+        const ghUser = localStorage.getItem('gh_username') || 'UmerDevHub';
+        const ghRepo = localStorage.getItem('gh_repo') || 'Eight_Ball';
         const ghToken = localStorage.getItem('gh_token') || '';
         const ghBranch = localStorage.getItem('gh_branch') || 'main';
 
