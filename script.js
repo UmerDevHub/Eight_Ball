@@ -120,26 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return btoa(unescape(encodeURIComponent(str)));
     };
 
-    // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
-    const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v6.1'; // Incremented to force-clear cache for new download buttons layout
-        const savedVersion = localStorage.getItem('prices_version');
-
-        if (savedVersion !== CURRENT_VERSION) {
-            localStorage.removeItem('saved_prices');
-            localStorage.setItem('prices_version', CURRENT_VERSION);
-            console.log('Layout changed: Cleared old price cache.');
-            return; // Stop here, let the fresh HTML prices load!
-        }
-
-        const savedPrices = JSON.parse(localStorage.getItem('saved_prices') || '{}');
-        editableElements.forEach((el, index) => {
-            if (savedPrices[index] !== undefined) {
-                el.innerText = savedPrices[index];
-            }
-        });
-    };
-    loadSavedPrices();
+    // Note: Prices are loaded directly from the HTML source code, ensuring 100% layout and text sync.
 
     // Helper to make an element editable with proper event handlers
     const makeElementEditable = (el) => {
@@ -354,9 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
         adminBar.querySelector('.admin-settings-btn').addEventListener('click', openSettingsModal);
         adminBar.querySelector('.admin-publish-btn').addEventListener('click', publishToGitHubVercel);
         adminBar.querySelector('.admin-reset-btn').addEventListener('click', () => {
-            if (confirm('Are you sure you want to reset all prices to the default HTML values? This will clear all local browser edits.')) {
-                localStorage.removeItem('saved_prices');
-                alert('Saved prices cleared! Reloading page...');
+            if (confirm('Are you sure you want to discard all unsaved edits and reload the page?')) {
                 location.reload();
             }
         });
@@ -409,15 +388,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Function to save edits to localStorage and download updated HTML file
     const getCleanHTMLString = () => {
-        // A. Save values to localStorage for immediate local view
-        const savedPrices = {};
-        const currentEditables = document.querySelectorAll('.price-editable');
-        currentEditables.forEach((el, index) => {
-            savedPrices[index] = el.innerText.trim();
-        });
-        localStorage.setItem('saved_prices', JSON.stringify(savedPrices));
-
-        // B. Temporarily clean up the DOM for clean export
+        // A. Temporarily clean up the DOM for clean export
         document.querySelectorAll('[contenteditable]').forEach(el => {
             el.removeAttribute('contenteditable');
         });
@@ -436,10 +407,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.body.classList.remove('admin-mode');
 
-        // C. Generate clean HTML string
+        // B. Generate clean HTML string
         const cleanHTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
 
-        // D. Restore Admin Mode state in active page
+        // C. Restore Admin Mode state in active page
         document.body.classList.add('admin-mode');
         document.querySelectorAll('.price-editable').forEach(el => {
             el.setAttribute('contenteditable', 'true');
