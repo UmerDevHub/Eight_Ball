@@ -651,24 +651,34 @@ header {
     }
 }
 
-/* Card Download Links */
-.card-dl-link {
-    display: inline-flex;
+/* Card Download Buttons (Consistent & Mobile Responsive) */
+.card-dl-btn {
+    display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-top: 1.2rem;
+    justify-content: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.8rem 1.4rem;
+    background: var(--primary-dim);
     color: var(--primary);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius-md);
     text-decoration: none;
     font-weight: 700;
-    font-size: 0.92rem;
-    transition: all 0.2s;
+    font-size: 0.95rem;
     font-family: var(--font-display);
+    transition: all 0.25s var(--ease-out-expo);
+    margin-top: auto; /* Automatically pushes the button to the bottom of the card for perfect visual consistency! */
 }
 
-.card-dl-link:hover {
-    color: #1d4ed8;
-    transform: translateX(3px);
+.card-dl-btn:hover {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 8px 20px var(--primary-glow);
+    transform: translateY(-1px);
 }
+
 
 /* VIP CASH DEALS TABLE */
 .vip-table-container {
