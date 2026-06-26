@@ -108,10 +108,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Header & Navigation */
 header {
-    background: #0f172a !important; /* Premium dark navy background */
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; /* subtle white border */
+    border-bottom: 1px solid var(--border-color);
     position: fixed;
     top: 0;
     left: 0;
@@ -132,7 +132,7 @@ header {
     font-weight: 900;
     letter-spacing: -1px;
     text-decoration: none;
-    color: #ffffff !important; /* Pure white text for ultra-clear visibility */
+    color: var(--text-main);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -153,20 +153,20 @@ header {
 
 .nav-links a {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.8) !important; /* High contrast semi-white links */
+    color: var(--text-muted);
     font-weight: 600;
     font-size: 0.95rem;
-    transition: all 0.3s;
+    transition: color 0.3s;
     font-family: var(--font-display);
 }
 
 .nav-links a:hover {
-    color: #ffffff !important; /* Bright white hover */
+    color: var(--primary);
 }
 
 .nav-links .btn-nav {
     background: var(--primary);
-    color: #fff !important;
+    color: #fff;
     padding: 0.5rem 1.2rem;
     border-radius: 100px;
     box-shadow: 0 4px 10px var(--primary-glow);
@@ -175,7 +175,7 @@ header {
 
 .nav-links .btn-nav:hover {
     background: #1d4ed8;
-    color: #fff !important;
+    color: #fff;
     transform: translateY(-1px);
     box-shadow: 0 6px 15px var(--primary-glow);
 }
@@ -243,17 +243,17 @@ header {
         justify-content: center !important;
     }
     
-    /* Style normal links as elegant dark-translucent pill tabs */
+    /* Style normal links as elegant light-grey pill tabs */
     .nav-links a:not(.btn-nav) {
-        background: rgba(255, 255, 255, 0.08) !important;
-        border: 1px solid rgba(255, 255, 255, 0.12) !important;
-        color: rgba(255, 255, 255, 0.9) !important;
+        background: var(--bg-tertiary) !important;
+        border: 1px solid var(--border-color) !important;
+        color: var(--text-muted) !important;
     }
     
     .nav-links a:not(.btn-nav):hover {
-        background: rgba(255, 255, 255, 0.16) !important;
-        border-color: rgba(255, 255, 255, 0.3) !important;
-        color: #ffffff !important;
+        background: var(--primary-dim) !important;
+        border-color: var(--primary) !important;
+        color: var(--primary) !important;
     }
     
     /* Make the CTA button shine */
@@ -386,7 +386,7 @@ header {
     font-family: var(--font-display);
     font-size: 0.85rem;
     font-weight: 800;
-    color: var(--text-main);
+    color: #ffffff !important; /* Fixed contrast bug: pure white text on dark badge background */
     z-index: 10;
     transition: all 0.3s;
 }
