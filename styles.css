@@ -376,19 +376,24 @@ header {
     right: 25px;
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(234, 88, 12, 0.3);
+    border: 1px solid rgba(251, 191, 36, 0.3) !important; /* Elegant gold border */
     padding: 0.5rem 1rem;
     border-radius: 100px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(251, 191, 36, 0.15); /* Subtle gold aura */
     font-family: var(--font-display);
     font-size: 0.85rem;
     font-weight: 800;
-    color: #ffffff !important; /* Fixed contrast bug: pure white text on dark badge background */
+    color: #fbbf24 !important; /* Premium Warm Yellow Gold Text */
     z-index: 10;
     transition: all 0.3s;
+}
+
+.hero-image-badge i {
+    color: #fbbf24 !important; /* Glowing gold crown icon */
+    filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.5));
 }
 
 .hero-image-container:hover .hero-image-badge {
