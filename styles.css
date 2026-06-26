@@ -1150,6 +1150,12 @@ body.admin-mode .price-editable {
     background: rgba(37, 99, 235, 0.04) !important;
 }
 
+/* Guarantee table cells never lose their cell structure in Admin Mode */
+body.admin-mode td.price-editable, body.admin-mode th.price-editable {
+    display: table-cell !important;
+    position: relative !important; /* Safe relative positioning on table cell */
+}
+
 body.admin-mode .price-editable:hover {
     outline-color: rgba(37, 99, 235, 0.8) !important;
     background: rgba(37, 99, 235, 0.1) !important;
@@ -1825,7 +1831,11 @@ body.admin-mode .admin-add-row-btn {
 
 /* Delete Row Button (Trash Icon) */
 .compact-price-table tr {
-    position: relative;
+    /* Safe table row rendering - no position: relative here to avoid WebKit stacking glitches */
+}
+
+.compact-price-table td:first-child {
+    position: relative !important;
 }
 
 .admin-delete-row-btn {
@@ -1840,7 +1850,7 @@ body.admin-mode .admin-add-row-btn {
     opacity: 0;
     transition: opacity 0.2s;
     display: none;
-    z-index: 5;
+    z-index: 105; /* High z-index to hover beautifully */
     padding: 2px 6px;
 }
 

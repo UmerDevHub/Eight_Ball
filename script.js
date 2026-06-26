@@ -179,7 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Prepend delete buttons to all existing rows (excluding headers)
             table.querySelectorAll('tr').forEach(row => {
                 if (row.querySelector('th')) return; // Skip header row
-                if (!row.querySelector('.admin-delete-row-btn')) {
+                const firstCell = row.querySelector('td');
+                if (firstCell && !firstCell.querySelector('.admin-delete-row-btn')) {
                     const delBtn = document.createElement('button');
                     delBtn.className = 'admin-delete-row-btn';
                     delBtn.setAttribute('title', 'Delete Row');
@@ -189,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.stopPropagation();
                         row.remove();
                     });
-                    row.appendChild(delBtn);
+                    firstCell.appendChild(delBtn);
                 }
             });
 
@@ -221,7 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.stopPropagation();
                         newRow.remove();
                     });
-                    newRow.appendChild(delBtn);
+                    const firstCell = newRow.querySelector('td');
+                    if (firstCell) {
+                        firstCell.appendChild(delBtn);
+                    }
                     
                     tbody.appendChild(newRow);
                 });
