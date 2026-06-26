@@ -239,6 +239,76 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // 4.5. Image Management: Add Image and Delete Image features
+        const setupImageDeleteButtons = (cardNode) => {
+            cardNode.querySelectorAll('.offer-image-container').forEach(container => {
+                if (!container.querySelector('.admin-delete-image-btn')) {
+                    container.style.position = 'relative';
+                    
+                    const delImgBtn = document.createElement('button');
+                    delImgBtn.className = 'admin-delete-image-btn';
+                    delImgBtn.setAttribute('title', 'Delete Image');
+                    delImgBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                    delImgBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to delete the image from this offer card?')) {
+                            container.remove();
+                            // Toggle visibility of Add Image button
+                            const addImgBtnNode = cardNode.querySelector('.admin-add-image-btn');
+                            if (addImgBtnNode) addImgBtnNode.style.display = 'inline-flex';
+                        }
+                    });
+                    container.appendChild(delImgBtn);
+                }
+            });
+        };
+
+        // Create "Add Image" button if it doesn't exist
+        let addImgBtn = card.querySelector('.admin-add-image-btn');
+        if (!addImgBtn) {
+            addImgBtn = document.createElement('div');
+            addImgBtn.className = 'admin-add-image-btn';
+            addImgBtn.innerHTML = '<i class="fa-solid fa-image"></i> Add Image';
+            addImgBtn.addEventListener('click', () => {
+                const container = document.createElement('div');
+                container.className = 'offer-image-container';
+                container.style.marginTop = '1rem';
+                container.style.marginBottom = '1rem';
+                container.innerHTML = `
+                    <img src="limitedOffer.jpg" alt="Offer Image" class="hover-zoom-img">
+                `;
+                
+                const cardInner = card.querySelector('.card-inner');
+                const table = cardInner.querySelector('.compact-price-table');
+                const dlBtn = cardInner.querySelector('.card-dl-btn');
+                
+                if (table) {
+                    cardInner.insertBefore(container, table);
+                } else if (dlBtn) {
+                    cardInner.insertBefore(container, dlBtn);
+                } else {
+                    cardInner.appendChild(container);
+                }
+                
+                setupImageDeleteButtons(card);
+                addImgBtn.style.display = 'none';
+            });
+
+            const cardInner = card.querySelector('.card-inner');
+            if (cardInner) {
+                cardInner.appendChild(addImgBtn);
+            }
+        }
+
+        // Setup visibility and delete buttons
+        if (card.querySelector('.offer-image-container')) {
+            addImgBtn.style.display = 'none';
+        } else {
+            addImgBtn.style.display = 'inline-flex';
+        }
+        setupImageDeleteButtons(card);
+
         // 5. Inject a global hovering delete button in the top-right of this card
         if (!card.querySelector('.admin-delete-card-global-btn')) {
             const delBtn = document.createElement('button');
@@ -462,6 +532,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-delete-card-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-card-global-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-card-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-image-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-image-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) {
@@ -490,6 +562,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-delete-card-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-card-global-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-card-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-image-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-image-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) adminBar.remove();
