@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v5.2'; // Incremented to force-clear cache for TikTok link addition
+        const CURRENT_VERSION = 'v5.3'; // Incremented to force-clear cache for video placeholder styling fix
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
