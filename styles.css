@@ -218,8 +218,8 @@ header {
 /* Hero Grid Layout */
 .hero-grid {
     display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 4rem;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2.2rem; /* Reduced gap to bring text and image closer together */
     align-items: center;
     text-align: left;
 }
@@ -228,6 +228,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    padding-left: 1.5rem; /* Shifts text right, reducing empty space to the image */
 }
 
 .hero-tag {
@@ -268,7 +269,7 @@ header {
     width: 100%;
 }
 
-/* Hero Image Card Styling */
+/* Hero Image Card Styling - Perfect Circle & Smooth Float */
 .hero-image-container {
     display: flex;
     justify-content: center;
@@ -278,20 +279,27 @@ header {
 
 .hero-image-card {
     position: relative;
-    width: 320px;
-    height: 320px;
-    border-radius: var(--radius-lg);
+    width: 300px;
+    height: 300px;
+    border-radius: 50%; /* Perfect circle! */
     overflow: hidden;
-    border: 3px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 40px var(--primary-glow);
+    border: 3.5px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3), 0 0 35px var(--primary-glow);
     background: var(--bg-secondary);
     transition: all 0.4s var(--ease-out-expo);
+    animation: floatProfile 6s ease-in-out infinite; /* Continuous premium floating animation */
+}
+
+@keyframes floatProfile {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
 }
 
 .hero-image-card:hover {
-    transform: translateY(-8px) rotate(2deg);
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 60px var(--fuchsia-glow);
-    border-color: rgba(192, 38, 211, 0.3);
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4), 0 0 50px var(--fuchsia-glow);
+    border-color: rgba(192, 38, 211, 0.4);
 }
 
 .hero-profile-img {
@@ -305,11 +313,11 @@ header {
     transform: scale(1.05);
 }
 
-/* Floating Badge on Profile */
+/* Floating Badge Positioned Outside the Circle Clip-Path */
 .hero-image-badge {
     position: absolute;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    bottom: 5px; /* Sits beautifully on the bottom-right curve of the circle */
+    right: 25px;
     background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(234, 88, 12, 0.3);
@@ -318,11 +326,17 @@ header {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     font-family: var(--font-display);
     font-size: 0.85rem;
     font-weight: 800;
     color: var(--text-main);
+    z-index: 10;
+    transition: all 0.3s;
+}
+
+.hero-image-container:hover .hero-image-badge {
+    transform: scale(1.05) translateY(-3px);
 }
 
 /* Responsive Hero Adjustments */
@@ -337,6 +351,7 @@ header {
     }
     .hero-content {
         align-items: center;
+        padding-left: 0; /* Reset shifting on mobile for perfect centering */
     }
     .hero h1 {
         font-size: clamp(2.4rem, 6vw, 3.2rem);
@@ -352,8 +367,12 @@ header {
         justify-content: center;
     }
     .hero-image-card {
-        width: 280px;
-        height: 280px;
+        width: 260px;
+        height: 260px;
+    }
+    .hero-image-badge {
+        bottom: 5px;
+        right: 15px; /* Adjusted position on mobile circle */
     }
 }
 
