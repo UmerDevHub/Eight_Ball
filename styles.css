@@ -1439,7 +1439,9 @@ body.admin-mode .price-editable:focus {
     z-index: 20000;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Align to top to allow natural scrolling */
+    overflow-y: auto; /* Enable vertical scrolling if content is taller than the screen */
+    padding: 3rem 1rem; /* Comfortable padding at top/bottom when scrolling */
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
