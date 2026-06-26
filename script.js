@@ -310,34 +310,64 @@ document.addEventListener('DOMContentLoaded', () => {
             addImgBtn.className = 'admin-add-image-btn';
             addImgBtn.innerHTML = '<i class="fa-solid fa-image"></i> Add Image';
             addImgBtn.addEventListener('click', () => {
-                const container = document.createElement('div');
-                container.className = 'offer-image-container';
-                container.style.marginTop = '1rem';
-                container.style.marginBottom = '1rem';
-                container.innerHTML = `
-                    <img src="limitedOffer.jpg" alt="Offer Image" class="hover-zoom-img">
-                `;
+                // 1. Immediately create a hidden file input to let them select their image first!
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.style.display = 'none';
+                document.body.appendChild(fileInput); // Safe clearance in all browsers
                 
-                const cardInner = card.querySelector('.card-inner');
-                const table = cardInner.querySelector('.compact-price-table');
-                const dlBtn = cardInner.querySelector('.card-dl-btn');
-                
-                if (table) {
-                    cardInner.insertBefore(container, table);
-                } else if (dlBtn) {
-                    cardInner.insertBefore(container, dlBtn);
-                } else {
-                    cardInner.appendChild(container);
-                }
-                
-                setupImageDeleteButtons(card);
-                addImgBtn.style.display = 'none';
+                fileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        if (file.size > 4 * 1024 * 1024) {
+                            alert('⚠️ WARNING: This image file is quite large (over 4MB).\n\nTo ensure your website loads instantly for all mobile and desktop visitors, we highly recommend selecting web-optimized images (under 1MB).');
+                        }
 
-                // Automatically trigger the computer's file chooser for the new image!
-                const imgEl = container.querySelector('img');
-                if (imgEl) {
-                    chooseImageFromFileSystem(imgEl);
-                }
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            // 2. ONLY after the file is successfully selected and read, build the container and insert it!
+                            const container = document.createElement('div');
+                            container.className = 'offer-image-container';
+                            container.style.marginTop = '1rem';
+                            container.style.marginBottom = '1rem';
+                            container.innerHTML = `
+                                <img src="${e.target.result}" alt="Offer Image" class="hover-zoom-img price-editable">
+                            `;
+                            
+                            const cardInner = card.querySelector('.card-inner');
+                            const table = cardInner.querySelector('.compact-price-table');
+                            const dlBtn = cardInner.querySelector('.card-dl-btn');
+                            
+                            if (table) {
+                                cardInner.insertBefore(container, table);
+                            } else if (dlBtn) {
+                                cardInner.insertBefore(container, dlBtn);
+                            } else {
+                                cardInner.appendChild(container);
+                            }
+                            
+                            setupImageDeleteButtons(card);
+                            addImgBtn.style.display = 'none';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                    
+                    // Cleanup input element from DOM
+                    if (fileInput.parentNode) {
+                        fileInput.remove();
+                    }
+                });
+                
+                // Trigger the file picker instantly
+                fileInput.click();
+                
+                // Backup cleanup if they cancel
+                setTimeout(() => {
+                    if (fileInput.parentNode) {
+                        fileInput.remove();
+                    }
+                }, 60000);
             });
 
             const cardInner = card.querySelector('.card-inner');
