@@ -158,6 +158,31 @@ document.addEventListener('DOMContentLoaded', () => {
         return input; // Fallback
     };
 
+    // Helper: Let user choose an image from their computer and load it as a Base64 URL
+    const chooseImageFromFileSystem = (imgElement) => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                // Warning if the file is excessively large (e.g. > 4MB) to keep page loading blazing fast
+                if (file.size > 4 * 1024 * 1024) {
+                    alert('⚠️ WARNING: This image file is quite large (over 4MB).\n\nTo ensure your website loads instantly for all mobile and desktop visitors, we highly recommend selecting web-optimized images (under 1MB).');
+                }
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imgElement.setAttribute('src', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        fileInput.click();
+    };
+
     // Note: Prices are loaded directly from the HTML source code, ensuring 100% layout and text sync.
 
     // Helper to make an element editable with proper event handlers
@@ -293,6 +318,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 setupImageDeleteButtons(card);
                 addImgBtn.style.display = 'none';
+
+                // Automatically trigger the computer's file chooser for the new image!
+                const imgEl = container.querySelector('img');
+                if (imgEl) {
+                    chooseImageFromFileSystem(imgEl);
+                }
             });
 
             const cardInner = card.querySelector('.card-inner');
@@ -873,19 +904,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            // Do not intercept video thumbnail images (since they are handled by the video placeholder block)
+            if (img.closest('.video-placeholder')) {
+                return;
+            }
+
             e.preventDefault();
             e.stopPropagation();
 
-            const currentSrc = img.getAttribute('src') || '';
-            const newSrc = prompt(
-                `📸 Edit Image Source:\n\nEnter the new image file name (e.g., offer2.jpg) or a web link URL (https://...):\n\n(Current: ${currentSrc})`, 
-                currentSrc
-            );
-            
-            if (newSrc !== null && newSrc.trim() !== '') {
-                img.setAttribute('src', newSrc.trim());
-                alert('Image updated successfully!');
-            }
+            // Trigger computer file selector!
+            chooseImageFromFileSystem(img);
             return;
         }
     }, true); // Capturing phase ensures we block the link from opening and intercept the click first!
