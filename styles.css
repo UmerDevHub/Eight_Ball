@@ -412,7 +412,7 @@ header {
 
 .card-inner {
     padding: 1.6rem;
-    height: 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
