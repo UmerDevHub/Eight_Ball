@@ -1542,13 +1542,20 @@ body.admin-mode .price-editable:focus {
         font-size: 0.80rem; /* Elegant legibility for column headers */
     }
     
-    /* Adjust column widths on mobile for perfect balance and zero squeezing */
+    /* Adjust column widths and align them to the right to fill empty space */
     .compact-price-table th:first-child, .compact-price-table td:first-child {
         width: 32%;
+        text-align: left;
     }
-    .compact-price-table th:nth-child(2), .compact-price-table td:nth-child(2),
+    .compact-price-table th:nth-child(2), .compact-price-table td:nth-child(2) {
+        width: 34%;
+        text-align: right;
+        padding-right: 1.5rem; /* Shifts PKR column right */
+    }
     .compact-price-table th:nth-child(3), .compact-price-table td:nth-child(3) {
         width: 34%;
+        text-align: right;
+        padding-right: 0.8rem; /* Shifts INR column to the right edge */
     }
 }
 
