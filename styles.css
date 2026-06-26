@@ -1604,3 +1604,33 @@ body.admin-mode .price-editable:focus {
     border: none;
     z-index: 10;
 }
+
+/* Offer Images styling with Hover Zoom & Premium Glow Effects */
+.offer-image-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s var(--ease-out-expo);
+}
+
+.offer-image-container:hover {
+    transform: translateY(-2px);
+    border-color: var(--fuchsia);
+    box-shadow: 0 12px 24px var(--fuchsia-glow);
+}
+
+.hover-zoom-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out-expo) !important;
+}
+
+.offer-image-container:hover .hover-zoom-img {
+    transform: scale(1.05);
+}
+
