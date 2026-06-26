@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v5.4'; // Incremented to force-clear cache for flag and Settings restoration
+        const CURRENT_VERSION = 'v5.5'; // Incremented to force-clear cache for stacked table headers
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
