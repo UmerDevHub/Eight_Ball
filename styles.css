@@ -896,6 +896,19 @@ header {
     transform: translateX(6px);
 }
 
+.social-pill.tiktok {
+    border-color: rgba(254, 44, 85, 0.3);
+    color: #fe2c55;
+}
+
+.social-pill.tiktok:hover {
+    background: linear-gradient(45deg, #25f4ee, #fe2c55);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 10px 20px rgba(254, 44, 85, 0.25);
+    transform: translateX(6px);
+}
+
 /* Footer */
 footer {
     border-top: 1px solid var(--border-color);
