@@ -914,6 +914,29 @@ footer {
 .footer-inner p {
     color: var(--text-light);
     font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#admin-trigger {
+    cursor: pointer;
+    opacity: 0.25;
+    margin-left: 8px;
+    font-size: 0.9rem;
+    padding: 12px; /* Enormous touch target for easy finger tapping on mobile! */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.2s, transform 0.2s;
+    color: var(--text-light);
+}
+
+#admin-trigger:hover {
+    opacity: 0.8;
+    color: var(--primary);
+    transform: scale(1.15);
 }
 
 /* ==========================================
@@ -1028,22 +1051,42 @@ body.admin-mode .price-editable:focus {
     transform: translateY(-1px);
 }
 
-@media (max-width: 850px) {
+@media (max-width: 768px) {
     #admin-bar {
         flex-direction: column;
-        padding: 1.2rem;
-        gap: 1rem;
-        bottom: 15px;
+        padding: 0.8rem 1rem;
+        gap: 0.6rem;
+        bottom: 10px;
+        width: 94%;
+        border-radius: 16px;
+    }
+    #admin-bar .admin-info {
+        font-size: 0.9rem;
+        justify-content: center;
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        padding-bottom: 0.4rem;
     }
     #admin-bar .admin-actions {
         width: 100%;
-        justify-content: center;
+        justify-content: space-between;
         flex-wrap: wrap;
+        gap: 0.4rem;
     }
     .admin-btn {
-        flex: 1;
-        min-width: 110px;
+        flex: 1 1 calc(50% - 0.4rem); /* 2 balanced columns on mobile! */
+        padding: 0.5rem 0.6rem;
+        font-size: 0.72rem;
+        min-width: 0; /* Scalable fluid buttons */
         text-align: center;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+    }
+    .admin-btn-save {
+        flex: 1 1 100%; /* Make primary "Publish Live" button take full width for premium layout! */
+        order: -1; /* Put the primary button at the top on mobile */
     }
 }
 
