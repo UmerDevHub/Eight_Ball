@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v4.8'; // Incremented to force-clear cache for click-to-play videos & zero-overlap tables
+        const CURRENT_VERSION = 'v4.9'; // Incremented to force-clear cache for flag-free plain PKR/INR table headers
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
