@@ -163,6 +163,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
         fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        document.body.appendChild(fileInput); // Crucial for security clearance in all browsers!
         
         fileInput.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -178,9 +180,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 reader.readAsDataURL(file);
             }
+            // Cleanup input element from the DOM
+            if (fileInput.parentNode) {
+                fileInput.remove();
+            }
         });
         
+        // Trigger the file picker
         fileInput.click();
+        
+        // Cleanup after 60 seconds if they cancel the dialog (since change event won't fire)
+        setTimeout(() => {
+            if (fileInput.parentNode) {
+                fileInput.remove();
+            }
+        }, 60000);
     };
 
     // Note: Prices are loaded directly from the HTML source code, ensuring 100% layout and text sync.
