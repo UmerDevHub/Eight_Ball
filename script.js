@@ -783,5 +783,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
+
+        // C. Intercept Images (<img> tags)
+        const img = e.target.closest('img');
+        if (img) {
+            // Do not intercept admin panel icons or modal images
+            if (img.closest('#admin-bar') || img.closest('#admin-settings-modal') || img.closest('#admin-modal-overlay')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            const currentSrc = img.getAttribute('src') || '';
+            const newSrc = prompt(
+                `📸 Edit Image Source:\n\nEnter the new image file name (e.g., offer2.jpg) or a web link URL (https://...):\n\n(Current: ${currentSrc})`, 
+                currentSrc
+            );
+            
+            if (newSrc !== null && newSrc.trim() !== '') {
+                img.setAttribute('src', newSrc.trim());
+                alert('Image updated successfully!');
+            }
+            return;
+        }
     }, true); // Capturing phase ensures we block the link from opening and intercept the click first!
 });

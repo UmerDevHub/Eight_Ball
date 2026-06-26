@@ -1942,6 +1942,13 @@ body.admin-mode a:hover, body.admin-mode .video-placeholder:hover {
     position: relative;
 }
 
+body.admin-mode img:hover {
+    outline: 2px dashed var(--orange) !important;
+    outline-offset: 2px !important;
+    cursor: pointer !important;
+    opacity: 0.95;
+}
+
 /* Tooltip helper for Admin Mode link editing */
 body.admin-mode a::after {
     content: " ✏️ Click to Edit Link URL" !important;
