@@ -834,9 +834,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
-            // If the link is inside the header (navbar), do NOT prompt for URL editing.
+            // If the link is inside the header (navbar) or is the logo, do NOT prompt for URL editing.
             // Only prevent the default navigation click so the text cursor can focus and edit the link name!
-            if (link.closest('header')) {
+            if (link.closest('header') || link.closest('.navbar') || link.classList.contains('logo') || link.closest('#nav-menu')) {
                 e.preventDefault();
                 return;
             }

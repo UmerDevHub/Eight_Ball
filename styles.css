@@ -1936,7 +1936,7 @@ body.admin-mode [contenteditable="true"]:hover {
     cursor: text !important;
 }
 
-body.admin-mode a:not(header a):hover, body.admin-mode .video-placeholder:hover {
+body.admin-mode a:not(header a):not(.logo):not(.navbar a):not(#nav-menu a):hover, body.admin-mode .video-placeholder:hover {
     outline: 2px dashed var(--fuchsia) !important;
     cursor: pointer !important;
     position: relative;
@@ -1950,7 +1950,7 @@ body.admin-mode img:hover {
 }
 
 /* Tooltip helper for Admin Mode link editing */
-body.admin-mode a:not(header a)::after {
+body.admin-mode a:not(header a):not(.logo):not(.navbar a):not(#nav-menu a)::after {
     content: " ✏️ Click to Edit Link URL" !important;
     display: none;
     position: absolute;
@@ -1969,7 +1969,7 @@ body.admin-mode a:not(header a)::after {
     z-index: 99999;
 }
 
-body.admin-mode a:not(header a):hover::after {
+body.admin-mode a:not(header a):not(.logo):not(.navbar a):not(#nav-menu a):hover::after {
     display: block !important;
 }
 
