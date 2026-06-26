@@ -120,6 +120,44 @@ document.addEventListener('DOMContentLoaded', () => {
         return btoa(unescape(encodeURIComponent(str)));
     };
 
+    // Helper: Extract YouTube or TikTok video ID from a full URL or return ID as is
+    const extractVideoId = (input) => {
+        if (!input) return '';
+        input = input.trim();
+        
+        // If it matches exactly 11 characters (typical YouTube ID) or is a purely numeric ID (typical TikTok ID)
+        if (/^[a-zA-Z0-9_-]{11}$/.test(input) || /^[0-9]+$/.test(input)) {
+            return input;
+        }
+        
+        // 1. YouTube short link (youtu.be/ID)
+        const shortRegex = /youtu\.be\/([a-zA-Z0-9_-]{11})/i;
+        const shortMatch = input.match(shortRegex);
+        if (shortMatch) return shortMatch[1];
+        
+        // 2. YouTube shorts link (youtube.com/shorts/ID)
+        const shortsRegex = /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/i;
+        const shortsMatch = input.match(shortsRegex);
+        if (shortsMatch) return shortsMatch[1];
+        
+        // 3. YouTube embed link (youtube.com/embed/ID)
+        const embedRegex = /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/i;
+        const embedMatch = input.match(embedRegex);
+        if (embedMatch) return embedMatch[1];
+        
+        // 4. YouTube watch link (youtube.com/watch?v=ID)
+        const watchRegex = /[?&]v=([a-zA-Z0-9_-]{11})/i;
+        const watchMatch = input.match(watchRegex);
+        if (watchMatch) return watchMatch[1];
+
+        // 5. TikTok video link (tiktok.com/@user/video/ID)
+        const tiktokRegex = /tiktok\.com\/@[a-zA-Z0-9_.]+\/video\/([0-9]+)/i;
+        const tiktokMatch = input.match(tiktokRegex);
+        if (tiktokMatch) return tiktokMatch[1];
+        
+        return input; // Fallback
+    };
+
     // Note: Prices are loaded directly from the HTML source code, ensuring 100% layout and text sync.
 
     // Helper to make an element editable with proper event handlers
@@ -710,14 +748,38 @@ document.addEventListener('DOMContentLoaded', () => {
             e.stopPropagation();
 
             const currentId = video.getAttribute('data-video-id') || '';
-            const newId = prompt(`🎬 Edit Video ID:\n\nEnter new YouTube or TikTok Video ID:`, currentId);
-            if (newId !== null) {
-                video.setAttribute('data-video-id', newId);
-                const img = video.querySelector('img');
-                if (img) {
-                    img.src = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
+            const isTikTok = video.getAttribute('data-video-type') === 'tiktok';
+            
+            // Build a helpful default display link for the user
+            let defaultLink = currentId;
+            if (currentId) {
+                if (isTikTok) {
+                    defaultLink = `https://www.tiktok.com/@user/video/${currentId}`;
+                } else {
+                    defaultLink = `https://www.youtube.com/watch?v=${currentId}`;
                 }
-                alert('Video ID updated successfully!');
+            }
+
+            const inputLink = prompt(
+                `🎬 Edit Video Link:\n\nPaste the entire YouTube or TikTok video link (or video ID) here:\n(e.g., https://www.youtube.com/watch?v=ihnsR1blhug)`, 
+                defaultLink
+            );
+            
+            if (inputLink !== null) {
+                const newId = extractVideoId(inputLink);
+                if (newId) {
+                    video.setAttribute('data-video-id', newId);
+                    const img = video.querySelector('img');
+                    if (img) {
+                        // If it's YouTube, update the thumbnail to the new video's high-res thumbnail
+                        if (!isTikTok) {
+                            img.src = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
+                        }
+                    }
+                    alert(`Video updated successfully!\n\nExtracted Video ID: ${newId}`);
+                } else {
+                    alert('Could not extract a valid Video ID from that link. Please make sure the link is correct.');
+                }
             }
             return;
         }
