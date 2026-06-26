@@ -788,8 +788,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" id="modal-admin-pwd" placeholder="e.g., admin123" value="${getAdminPassword()}">
                 </div>
                 <div class="modal-actions">
-                    <button class="admin-btn admin-btn-exit modal-cancel-btn">Cancel</button>
-                    <button class="admin-btn admin-btn-save modal-save-btn">Save Settings</button>
+                    <button class="modal-btn-cancel">Cancel</button>
+                    <button class="modal-btn-save"><i class="fa-solid fa-cloud-arrow-up"></i> Save Settings</button>
                 </div>
             </div>
         `;
@@ -803,8 +803,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Listeners
         modalOverlay.querySelector('.modal-close').addEventListener('click', closeSettingsModal);
-        modalOverlay.querySelector('.modal-cancel-btn').addEventListener('click', closeSettingsModal);
-        modalOverlay.querySelector('.modal-save-btn').addEventListener('click', saveSettings);
+        modalOverlay.querySelector('.modal-btn-cancel').addEventListener('click', closeSettingsModal);
+        modalOverlay.querySelector('.modal-btn-save').addEventListener('click', saveSettings);
     };
 
     const closeSettingsModal = () => {

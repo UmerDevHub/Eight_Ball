@@ -2320,3 +2320,62 @@ body.admin-mode .admin-add-pay-item-btn {
     transform: translateY(-1px) !important;
     box-shadow: var(--shadow-sm);
 }
+
+/* Modal Custom Buttons for high-end UI */
+.modal-actions {
+    display: flex !important;
+    gap: 1rem !important;
+    margin-top: 2rem !important;
+    width: 100% !important;
+}
+
+.modal-btn-save {
+    flex: 2 !important; /* takes up more space, very prominent! */
+    background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%) !important;
+    color: #ffffff !important;
+    border: none !important;
+    padding: 0.8rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-family: var(--font-display) !important;
+    font-weight: 800 !important;
+    font-size: 0.95rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25) !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.modal-btn-save:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4) !important;
+    filter: brightness(1.05);
+}
+
+.modal-btn-save:active {
+    transform: translateY(0) !important;
+}
+
+.modal-btn-cancel {
+    flex: 1 !important; /* smaller, less prominent but clean */
+    background: var(--bg-secondary) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    padding: 0.8rem 1.5rem !important;
+    border-radius: 12px !important;
+    font-family: var(--font-display) !important;
+    font-weight: 700 !important;
+    font-size: 0.9rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-btn-cancel:hover {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-main) !important;
+}
