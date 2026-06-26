@@ -803,6 +803,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // If the link is inside the header (navbar), do NOT prompt for URL editing.
+            // Only prevent the default navigation click so the text cursor can focus and edit the link name!
+            if (link.closest('header')) {
+                e.preventDefault();
+                return;
+            }
+            
             e.preventDefault();
             e.stopPropagation();
 
