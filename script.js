@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v4.6'; // Incremented to force-clear cache for mobile admin mode & enter-to-commit UX
+        const CURRENT_VERSION = 'v4.7'; // Incremented to force-clear cache for table subheadings and zero-overlap layout
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {

@@ -1266,13 +1266,26 @@ body.admin-mode .price-editable:focus {
     white-space: nowrap; /* Prevents ugly price line breaks on mobile devices */
 }
 
+/* Table Subheading Title (for multi-table cards) */
+.table-title {
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-top: 1.2rem;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
 /* Equal column allocation */
 .compact-price-table th:first-child, .compact-price-table td:first-child {
-    width: 34%;
+    width: 38%;
 }
 .compact-price-table th:nth-child(2), .compact-price-table td:nth-child(2),
 .compact-price-table th:nth-child(3), .compact-price-table td:nth-child(3) {
-    width: 33%;
+    width: 31%;
 }
 
 .compact-price-table th {
