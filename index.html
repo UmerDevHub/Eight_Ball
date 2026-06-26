@@ -659,28 +659,94 @@
                 <!-- Payment Methods -->
                 <div class="card bento-card bento-span-2">
                     <div class="card-inner">
-                        <div class="card-header" style="margin-bottom: 1.5rem;">
+                        <div class="card-header" style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
                             <div class="icon-box bg-cyan-10"><i class="fa-solid fa-wallet"></i></div>
-                            <h3 class="price-editable">Secure Payments</h3>
+                            <div>
+                                <h3 class="price-editable">Secure Payment Methods</h3>
+                                <p class="text-sm price-editable" style="color:var(--text-muted); margin-top: 0.2rem;">Choose your preferred method. Click any account detail to copy instantly!</p>
+                            </div>
                         </div>
                         
-                        <div class="payment-grid">
-                            <div class="pay-item">
-                                <h4 class="price-editable">EasyPaisa / JazzCash / NayaPay</h4>
-                                <div class="copy-box" title="Click to copy account number">
-                                    <strong class="price-editable">03249906293</strong>
-                                    <button class="btn-copy" aria-label="Copy account number"><i class="fa-regular fa-copy"></i></button>
+                        <div class="payment-categories-grid">
+                            <!-- Category 1: Mobile Wallets -->
+                            <div class="payment-category-column">
+                                <div class="category-header">
+                                    <i class="fa-solid fa-mobile-screen-button text-gradient-emerald"></i>
+                                    <h4 class="price-editable">Mobile Wallets</h4>
                                 </div>
-                                <p class="text-sm mt-2 price-editable" style="margin-top: 0.5rem; color:var(--text-muted);">Account Holder: <strong style="color:var(--text-main);" class="price-editable">Farhan Ullah</strong></p>
+                                <div class="pay-item" style="border: none; padding: 0; background: none;">
+                                    <h5 class="price-editable">EasyPaisa / JazzCash / NayaPay</h5>
+                                    <div class="copy-box" title="Click to copy account number" style="margin-bottom: 0.4rem;">
+                                        <strong class="price-editable">03249906293</strong>
+                                        <button class="btn-copy" aria-label="Copy account number"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                    <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left;">Holder: <strong style="color:var(--text-main);" class="price-editable">Farhan Ullah</strong></p>
+                                </div>
                             </div>
                             
-                            <div class="pay-item">
-                                <h4 class="price-editable">HBL Bank Account</h4>
-                                <div class="copy-box" title="Click to copy bank account">
-                                    <strong class="price-editable">02267900284303</strong>
-                                    <button class="btn-copy" aria-label="Copy bank account"><i class="fa-regular fa-copy"></i></button>
+                            <!-- Category 2: Bank Accounts -->
+                            <div class="payment-category-column">
+                                <div class="category-header">
+                                    <i class="fa-solid fa-building-columns text-gradient-primary"></i>
+                                    <h4 class="price-editable">Bank Accounts</h4>
                                 </div>
-                                <p class="text-sm mt-2 price-editable" style="margin-top: 0.5rem; color:var(--text-muted);">Account Holder: <strong style="color:var(--text-main);" class="price-editable">Farhan Ullah</strong></p>
+                                
+                                <!-- HBL -->
+                                <div class="pay-item" style="border: none; padding: 0; background: none; margin-bottom: 0.8rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.8rem;">
+                                    <h5 class="price-editable">Habib Bank Limited (HBL)</h5>
+                                    <div class="copy-box" title="Click to copy Account Number" style="margin-bottom: 0.4rem;">
+                                        <strong class="price-editable">02267900284303</strong>
+                                        <button class="btn-copy" aria-label="Copy account number"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                    <div class="copy-box iban-box" title="Click to copy IBAN" style="margin-bottom: 0.4rem;">
+                                        <strong class="price-editable">PK71HABB0002267900284303</strong>
+                                        <button class="btn-copy" aria-label="Copy IBAN"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                    <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left; line-height: 1.3;">
+                                        Holder: <strong style="color:var(--text-main);" class="price-editable">FARHAN ULLAH</strong><br>
+                                        Branch: <span class="price-editable">IBB Mathra</span>
+                                    </p>
+                                </div>
+                                
+                                <!-- NBP -->
+                                <div class="pay-item" style="border: none; padding: 0; background: none;">
+                                    <h5 class="price-editable">National Bank of Pakistan</h5>
+                                    <div class="copy-box iban-box" title="Click to copy IBAN" style="margin-bottom: 0.4rem;">
+                                        <strong class="price-editable">PK26NBPA2270004321648550</strong>
+                                        <button class="btn-copy" aria-label="Copy IBAN"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                    <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left;">Holder: <strong style="color:var(--text-main);" class="price-editable">Farhan ullah</strong></p>
+                                </div>
+                            </div>
+                            
+                            <!-- Category 3: International & Crypto -->
+                            <div class="payment-category-column">
+                                <div class="category-header">
+                                    <i class="fa-solid fa-globe text-gradient-fuchsia"></i>
+                                    <h4 class="price-editable">International &amp; Crypto</h4>
+                                </div>
+                                
+                                <!-- PayPal -->
+                                <div class="pay-item" style="border: none; padding: 0; background: none; margin-bottom: 0.8rem; border-bottom: 1px dashed var(--border-color); padding-bottom: 0.8rem;">
+                                    <h5 class="price-editable">PayPal Email</h5>
+                                    <div class="copy-box iban-box" title="Click to copy PayPal email">
+                                        <strong class="price-editable">ahmdshayan701@gmail.com</strong>
+                                        <button class="btn-copy" aria-label="Copy email"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Binance Pay -->
+                                <div class="pay-item" style="border: none; padding: 0; background: none;">
+                                    <h5 class="price-editable">Binance Pay (ID / Email)</h5>
+                                    <div class="copy-box" title="Click to copy Binance ID" style="margin-bottom: 0.4rem;">
+                                        <strong class="price-editable">176750200</strong>
+                                        <button class="btn-copy" aria-label="Copy Binance ID"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                    <div class="copy-box iban-box" title="Click to copy Binance Email">
+                                        <strong class="price-editable">farhanullahyt@gmail.com</strong>
+                                        <button class="btn-copy" aria-label="Copy Binance Email"><i class="fa-regular fa-copy"></i></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
