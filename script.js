@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Load saved prices from localStorage on page load with auto-cleanup versioning
     const loadSavedPrices = () => {
-        const CURRENT_VERSION = 'v5.0'; // Incremented to force-clear cache for final KOS flag cleanup
+        const CURRENT_VERSION = 'v5.1'; // Incremented to force-clear cache for clean Admin Bar update
         const savedVersion = localStorage.getItem('prices_version');
 
         if (savedVersion !== CURRENT_VERSION) {
@@ -175,9 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="admin-actions">
                 <button class="admin-btn admin-btn-save admin-publish-btn"><i class="fa-solid fa-bolt"></i> Publish Live</button>
-                <button class="admin-btn admin-btn-exit admin-settings-btn"><i class="fa-solid fa-cog"></i> Settings</button>
                 <button class="admin-btn admin-btn-exit admin-reset-btn" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444;"><i class="fa-solid fa-rotate-left"></i> Reset Defaults</button>
-                <button class="admin-btn admin-btn-exit admin-download-btn"><i class="fa-solid fa-download"></i> Download HTML</button>
                 <button class="admin-btn admin-btn-exit admin-close-btn">Exit</button>
             </div>
         `;
@@ -191,8 +189,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Add event listeners to the buttons
         adminBar.querySelector('.admin-close-btn').addEventListener('click', exitAdminMode);
-        adminBar.querySelector('.admin-download-btn').addEventListener('click', saveAndDownloadHTML);
-        adminBar.querySelector('.admin-settings-btn').addEventListener('click', openSettingsModal);
         adminBar.querySelector('.admin-publish-btn').addEventListener('click', publishToGitHubVercel);
         adminBar.querySelector('.admin-reset-btn').addEventListener('click', () => {
             if (confirm('Are you sure you want to reset all prices to the default HTML values? This will clear all local browser edits.')) {
