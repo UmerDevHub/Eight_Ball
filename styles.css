@@ -371,6 +371,9 @@ header {
     .hero-actions {
         justify-content: center;
     }
+    .hero-image-container {
+        order: -1; /* Push image on top of text on mobile screens */
+    }
     .hero-image-card {
         width: 260px;
         height: 260px;
