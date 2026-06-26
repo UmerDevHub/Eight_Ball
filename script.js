@@ -141,6 +141,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     loadSavedPrices();
 
+    // Helper to make an element editable with proper event handlers
+    const makeElementEditable = (el) => {
+        el.setAttribute('contenteditable', 'true');
+        el.addEventListener('click', preventDefaultClick);
+        el.addEventListener('keydown', preventEnterKey);
+    };
+
     // 2. Function to enter Admin Mode
     let isAdminActive = false;
     const enterAdminMode = () => {
@@ -156,14 +163,168 @@ document.addEventListener('DOMContentLoaded', () => {
         isAdminActive = true;
         document.body.classList.add('admin-mode');
 
-        // Make all elements editable
-        editableElements.forEach(el => {
-            el.setAttribute('contenteditable', 'true');
-            // Prevent links from navigating while editing
-            el.addEventListener('click', preventDefaultClick);
-            // Prevent enter key from creating new lines in editable elements
-            el.addEventListener('keydown', preventEnterKey);
+        // Dynamically find and make ALL text elements on the page editable
+        const selectors = 'h1, h2, h3, h4, h5, h6, p, .btn, td, th, .hero-tag, .copy-box strong, .profile-badge, .profile-status';
+        document.querySelectorAll(selectors).forEach(el => {
+            // Exclude admin-specific control bar elements
+            if (!el.closest('#admin-bar') && !el.closest('#admin-settings-modal') && !el.closest('#admin-modal-overlay')) {
+                el.classList.add('price-editable');
+                makeElementEditable(el);
+            }
         });
+
+        // Bind double-click link editor to all <a> tags for quick link editing
+        document.querySelectorAll('a').forEach(link => {
+            if (link.closest('#admin-bar') || link.closest('#admin-settings-modal') || link.closest('#admin-modal-overlay')) return;
+            
+            // Show a prompt to edit the href link URL
+            link.addEventListener('dblclick', (e) => {
+                if (!isAdminActive) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const currentUrl = link.getAttribute('href') || '';
+                const newUrl = prompt(`Enter new Link URL for "${link.innerText.trim()}":\n(e.g., https://wa.me/923349013513)`, currentUrl);
+                if (newUrl !== null) {
+                    link.setAttribute('href', newUrl);
+                    alert('Link URL updated successfully! This change is now part of the page.');
+                }
+            });
+        });
+
+        // Bind double-click video ID editor to all video placeholders
+        document.querySelectorAll('.video-placeholder').forEach(video => {
+            video.addEventListener('dblclick', (e) => {
+                if (!isAdminActive) return;
+                e.preventDefault();
+                e.stopPropagation();
+                const currentId = video.getAttribute('data-video-id') || '';
+                const newId = prompt(`Enter new YouTube/TikTok Video ID for this video:\n(e.g., ihnsR1blhug)`, currentId);
+                if (newId !== null) {
+                    video.setAttribute('data-video-id', newId);
+                    const img = video.querySelector('img');
+                    if (img) {
+                        img.src = `https://img.youtube.com/vi/${newId}/maxresdefault.jpg`;
+                    }
+                    alert('Video ID updated successfully! Click to play your new video.');
+                }
+            });
+        });
+
+        // Inject delete buttons to all existing table rows (skip headers containing TH)
+        document.querySelectorAll('.compact-price-table tr').forEach(row => {
+            if (row.querySelector('th')) return; // Skip header row
+            if (!row.querySelector('.admin-delete-row-btn')) {
+                const delBtn = document.createElement('button');
+                delBtn.className = 'admin-delete-row-btn';
+                delBtn.setAttribute('title', 'Delete Row');
+                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                delBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    row.remove();
+                });
+                row.appendChild(delBtn);
+            }
+        });
+
+        // Inject "Add Row" button below each table
+        document.querySelectorAll('.compact-price-table').forEach(table => {
+            let addBtn = table.nextElementSibling;
+            if (!addBtn || !addBtn.classList.contains('admin-add-row-btn')) {
+                addBtn = document.createElement('div');
+                addBtn.className = 'admin-add-row-btn';
+                addBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Add New Row';
+                addBtn.addEventListener('click', () => {
+                    const tbody = table.querySelector('tbody') || table;
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td class="price-editable">New Deal</td>
+                        <td class="pkr-text"><strong class="price-editable">1,000</strong></td>
+                        <td class="inr-text"><strong class="price-editable">300</strong></td>
+                    `;
+                    
+                    // Make new cells editable
+                    newRow.querySelectorAll('.price-editable').forEach(cell => makeElementEditable(cell));
+                    
+                    // Inject delete button to the new row
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'admin-delete-row-btn';
+                    delBtn.setAttribute('title', 'Delete Row');
+                    delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                    delBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        newRow.remove();
+                    });
+                    newRow.appendChild(delBtn);
+                    
+                    tbody.appendChild(newRow);
+                });
+                table.parentNode.insertBefore(addBtn, table.nextSibling);
+            }
+        });
+
+        // Inject delete buttons to all existing payment cards
+        document.querySelectorAll('.pay-item').forEach(card => {
+            if (!card.querySelector('.admin-delete-card-btn')) {
+                const delBtn = document.createElement('button');
+                delBtn.className = 'admin-delete-card-btn';
+                delBtn.setAttribute('title', 'Delete Payment Method');
+                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                delBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    card.remove();
+                });
+                card.appendChild(delBtn);
+            }
+        });
+
+        // Inject "Add Payment Method" card at the end of the payment grid
+        const paymentGrid = document.querySelector('.payment-grid');
+        if (paymentGrid) {
+            let addCard = paymentGrid.querySelector('.admin-add-payment-card');
+            if (!addCard) {
+                addCard = document.createElement('div');
+                addCard.className = 'admin-add-payment-card';
+                addCard.innerHTML = `
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Payment Method</span>
+                `;
+                addCard.addEventListener('click', () => {
+                    const newCard = document.createElement('div');
+                    newCard.className = 'pay-item';
+                    newCard.innerHTML = `
+                        <h4 class="price-editable">New Bank Account</h4>
+                        <div class="copy-box" title="Click to copy account details">
+                            <strong class="price-editable">000000000000</strong>
+                            <button class="btn-copy" aria-label="Copy account details"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                        <p class="text-sm mt-2" style="margin-top: 0.5rem; color:var(--text-muted);">
+                            Account Holder: <strong style="color:var(--text-main);" class="price-editable">Holder Name</strong>
+                        </p>
+                    `;
+                    
+                    // Make new elements editable
+                    newCard.querySelectorAll('.price-editable').forEach(el => makeElementEditable(el));
+                    
+                    // Inject delete button for the new card
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'admin-delete-card-btn';
+                    delBtn.setAttribute('title', 'Delete Payment Method');
+                    delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                    delBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        newCard.remove();
+                    });
+                    newCard.appendChild(delBtn);
+                    
+                    paymentGrid.insertBefore(newCard, addCard);
+                });
+                paymentGrid.appendChild(addCard);
+            }
+        }
 
         // Create the beautiful glassmorphic Admin Control Bar
         const adminBar = document.createElement('div');
@@ -200,7 +361,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        alert('Success! Admin Mode Activated.\n\nClick on any highlighted price, account number, or contact detail and type your changes directly on the screen.');
+        alert('Success! Admin Mode Activated.\n\nClick on any text, heading, or button on the screen and type your changes directly!\n\n💡 Double-click any link or button to edit its URL.\n🎬 Double-click any video card to change the Video ID.\n➕ Use the "Add New Row" and "Add Payment Method" buttons to add items!\n🗑️ Hover over items and click the red trash icon to delete them.');
     };
 
     const preventDefaultClick = (e) => {
@@ -223,11 +384,15 @@ document.addEventListener('DOMContentLoaded', () => {
         isAdminActive = false;
         document.body.classList.remove('admin-mode');
 
-        editableElements.forEach(el => {
+        document.querySelectorAll('[contenteditable]').forEach(el => {
             el.removeAttribute('contenteditable');
-            el.removeEventListener('click', preventDefaultClick);
-            el.removeEventListener('keydown', preventEnterKey);
         });
+
+        // Clean up CRUD additions
+        document.querySelectorAll('.admin-add-row-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-row-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-payment-card').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-card-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) {
@@ -237,21 +402,31 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Remove settings modal if open
         closeSettingsModal();
+
+        // Reload to restore the clean client view
+        location.reload();
     };
 
     // 4. Function to save edits to localStorage and download updated HTML file
     const getCleanHTMLString = () => {
         // A. Save values to localStorage for immediate local view
         const savedPrices = {};
-        editableElements.forEach((el, index) => {
+        const currentEditables = document.querySelectorAll('.price-editable');
+        currentEditables.forEach((el, index) => {
             savedPrices[index] = el.innerText.trim();
         });
         localStorage.setItem('saved_prices', JSON.stringify(savedPrices));
 
         // B. Temporarily clean up the DOM for clean export
-        editableElements.forEach(el => {
+        document.querySelectorAll('[contenteditable]').forEach(el => {
             el.removeAttribute('contenteditable');
         });
+
+        // Remove all Admin Mode CRUD injections
+        document.querySelectorAll('.admin-add-row-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-row-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-add-payment-card').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-card-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) adminBar.remove();
@@ -266,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // D. Restore Admin Mode state in active page
         document.body.classList.add('admin-mode');
-        editableElements.forEach(el => {
+        document.querySelectorAll('.price-editable').forEach(el => {
             el.setAttribute('contenteditable', 'true');
         });
         if (adminBar) {
@@ -455,6 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             alert('🎉 SUCCESS! Deploy Triggered.\n\nYour changes have been committed to GitHub. Vercel is now building your site in the background!\n\nYour live website will update automatically in about 15 to 25 seconds.');
+            location.reload();
 
         } catch (error) {
             console.error('Deployment Failed:', error);
