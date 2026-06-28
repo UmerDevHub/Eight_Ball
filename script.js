@@ -218,8 +218,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         el.setAttribute('contenteditable', 'true');
-        // Prevent click navigation on editable texts
-        el.addEventListener('click', preventDefaultClick);
         // Prevent Enter key from creating new lines in editable fields
         el.addEventListener('keydown', preventEnterKey);
     };
@@ -656,11 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Success! Admin Mode Activated.\n\n✨ Click & Edit: Click any text, heading, or button to type changes.\n🔗 Edit Links: Double-click any link or button to change its URL.\n🎬 Edit Videos: Double-click video cards to change the YouTube ID.\n➕ Add Items: Click the "+ Add New Offer Card" or "+ Add New Row" buttons.\n🗑️ Delete Items: Hover over cards or rows and click the red trash can!');
     };
 
-    const preventDefaultClick = (e) => {
-        if (isAdminActive) {
-            e.preventDefault();
-        }
-    };
+
 
     const preventEnterKey = (e) => {
         if (e.key === 'Enter') {
