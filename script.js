@@ -266,8 +266,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
                         <td class="price-editable">New Deal</td>
-                        <td class="pkr-text"><strong class="price-editable">1,000</strong></td>
-                        <td class="inr-text"><strong class="price-editable">300</strong></td>
+                        <td class="pkr-text price-editable"><strong>1,000</strong></td>
+                        <td class="inr-text price-editable"><strong>300</strong></td>
                     `;
                     
                     // Make new cells editable
@@ -446,6 +446,11 @@ document.addEventListener('DOMContentLoaded', () => {
             setupCardInteractivity(card);
         });
 
+        // Fallback: Ensure any element on the page with .price-editable class is editable
+        document.querySelectorAll('.price-editable').forEach(el => {
+            makeElementEditable(el);
+        });
+
         // Inject "Add New Offer Card" button to all bento grids (except payment-grid)
         document.querySelectorAll('.bento-grid').forEach(grid => {
             if (grid.classList.contains('payment-grid')) return; // Skip payment grid (has its own card add logic)
@@ -484,14 +489,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>7 Days</td>
-                                        <td class="pkr-text"><strong class="price-editable">1,000</strong></td>
-                                        <td class="inr-text"><strong class="price-editable">300</strong></td>
+                                        <td class="price-editable">7 Days</td>
+                                        <td class="pkr-text price-editable"><strong>1,000</strong></td>
+                                        <td class="inr-text price-editable"><strong>300</strong></td>
                                     </tr>
                                     <tr class="row-highlight">
-                                        <td>30 Days</td>
-                                        <td class="pkr-text"><strong class="price-editable">3,000</strong></td>
-                                        <td class="inr-text"><strong class="price-editable">900</strong></td>
+                                        <td class="price-editable">30 Days</td>
+                                        <td class="pkr-text price-editable"><strong>3,000</strong></td>
+                                        <td class="inr-text price-editable"><strong>900</strong></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -588,8 +593,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 if (holder || branch) {
-                    let holderHtml = holder ? `Holder: <strong style="color:var(--text-main);" class="price-editable">${holder}</strong>` : '';
-                    let branchHtml = branch ? `Branch: <span class="price-editable">${branch}</span>` : '';
+                    let holderHtml = holder ? `Holder: <strong style="color:var(--text-main);">${holder}</strong>` : '';
+                    let branchHtml = branch ? `Branch: <span>${branch}</span>` : '';
                     let separator = (holder && branch) ? '<br>' : '';
                     html += `
                         <p class="text-xs mt-1 price-editable" style="color:var(--text-muted); text-align: left;">
