@@ -845,6 +845,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-card-controls').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-video-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-dl-btn').forEach(el => el.remove());
+        document.querySelectorAll('input[type="file"]').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) {
@@ -880,6 +881,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-card-controls').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-video-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-dl-btn').forEach(el => el.remove());
+        document.querySelectorAll('input[type="file"]').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) adminBar.remove();
