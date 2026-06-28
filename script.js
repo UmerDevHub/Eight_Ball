@@ -890,11 +890,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const cleanHTML = getCleanHTMLString();
 
-            // A. Fetch current file SHA from GitHub API
-            const getUrl = `https://api.github.com/repos/${user}/${repo}/contents/index.html?ref=${branch}`;
+            // A. Fetch current file SHA from GitHub API (bypass cache using timestamp and headers!)
+            const getUrl = `https://api.github.com/repos/${user}/${repo}/contents/index.html?ref=${branch}&t=${Date.now()}`;
             const headers = {
                 'Authorization': `token ${token}`,
-                'Accept': 'application/vnd.github.v3+json'
+                'Accept': 'application/vnd.github.v3+json',
+                'Cache-Control': 'no-cache',
+                'Pragma': 'no-cache'
             };
 
             const response = await fetch(getUrl, { headers });
