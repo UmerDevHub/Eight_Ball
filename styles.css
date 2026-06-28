@@ -2214,10 +2214,15 @@ body.admin-mode .admin-add-card-btn {
     margin-top: 1.2rem;
     padding-top: 1rem;
     border-top: 1px dashed var(--border-color);
+    width: 100%;
 }
 
 body.admin-mode .admin-card-controls {
     display: flex;
+}
+
+body.admin-mode .card-inner.flex-row {
+    flex-wrap: wrap;
 }
 
 /* Base style for Add Actions in Cards */
