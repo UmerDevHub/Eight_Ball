@@ -413,19 +413,23 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <img src="${e.target.result}" alt="Offer Image" class="hover-zoom-img price-editable">
                             `;
                             
-                            const cardInner = card.querySelector('.card-inner');
-                            const table = cardInner.querySelector('.compact-price-table');
-                            const video = cardInner.querySelector('.video-wrapper');
-                            const dlBtn = cardInner.querySelector('.card-dl-btn');
+                            const contentContainer = card.querySelector('.card-content-half') || card.querySelector('.card-inner');
+                            const table = contentContainer.querySelector('.compact-price-table');
+                            const video = contentContainer.querySelector('.video-wrapper');
+                            const dlBtn = contentContainer.querySelector('.card-dl-btn');
                             
-                            if (table) {
-                                cardInner.insertBefore(container, table);
-                            } else if (video) {
-                                cardInner.insertBefore(container, video);
-                            } else if (dlBtn) {
-                                cardInner.insertBefore(container, dlBtn);
+                            if (table && table.parentNode === contentContainer) {
+                                contentContainer.insertBefore(container, table);
+                            } else if (video && video.parentNode === contentContainer) {
+                                contentContainer.insertBefore(container, video);
+                            } else if (dlBtn && dlBtn.parentNode === contentContainer) {
+                                contentContainer.insertBefore(container, dlBtn);
                             } else {
-                                cardInner.insertBefore(container, adminControls);
+                                if (adminControls.parentNode === contentContainer) {
+                                    contentContainer.insertBefore(container, adminControls);
+                                } else {
+                                    contentContainer.appendChild(container);
+                                }
                             }
                             
                             setupImageDeleteButtons(card);
@@ -480,13 +484,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         `;
                         
-                        const cardInner = card.querySelector('.card-inner');
-                        const dlBtn = cardInner.querySelector('.card-dl-btn');
+                        const contentContainer = card.querySelector('.card-content-half') || card.querySelector('.card-inner');
+                        const dlBtn = contentContainer.querySelector('.card-dl-btn');
                         
-                        if (dlBtn) {
-                            cardInner.insertBefore(container, dlBtn);
+                        if (dlBtn && dlBtn.parentNode === contentContainer) {
+                            contentContainer.insertBefore(container, dlBtn);
                         } else {
-                            cardInner.insertBefore(container, adminControls);
+                            if (adminControls.parentNode === contentContainer) {
+                                contentContainer.insertBefore(container, adminControls);
+                            } else {
+                                contentContainer.appendChild(container);
+                            }
                         }
                         
                         setupVideoDeleteButtons(card);
@@ -525,8 +533,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 dlBtnEl.target = '_blank';
                 dlBtnEl.innerHTML = `<i class="fa-solid fa-download"></i> ${text}`;
                 
-                const cardInner = card.querySelector('.card-inner');
-                cardInner.insertBefore(dlBtnEl, adminControls);
+                const contentContainer = card.querySelector('.card-content-half') || card.querySelector('.card-inner');
+                if (adminControls.parentNode === contentContainer) {
+                    contentContainer.insertBefore(dlBtnEl, adminControls);
+                } else {
+                    contentContainer.appendChild(dlBtnEl);
+                }
                 
                 makeElementEditable(dlBtnEl);
                 setupDownloadDeleteButtons(card);
