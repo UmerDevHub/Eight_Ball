@@ -2206,31 +2206,74 @@ body.admin-mode .admin-add-card-btn {
     font-size: 1.1rem !important;
 }
 
-/* Add Image Button inside Cards */
-.admin-add-image-btn {
-    display: none; /* Hidden by default */
+/* Admin Card Controls Row */
+.admin-card-controls {
+    display: none;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border-color);
+}
+
+body.admin-mode .admin-card-controls {
+    display: flex;
+}
+
+/* Base style for Add Actions in Cards */
+.admin-add-image-btn,
+.admin-add-video-btn,
+.admin-add-dl-btn {
+    display: none;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    background: rgba(234, 88, 12, 0.08) !important;
-    border: 1px dashed rgba(234, 88, 12, 0.3) !important;
-    color: var(--orange) !important;
-    padding: 0.4rem 0.8rem !important;
-    border-radius: 6px !important;
+    padding: 0.45rem 0.85rem !important;
+    border-radius: 8px !important;
     font-size: 0.8rem !important;
     font-weight: 700 !important;
     cursor: pointer !important;
-    margin-top: 0.8rem !important;
     width: fit-content !important;
     transition: all 0.2s !important;
+    border: 1px dashed transparent !important;
 }
 
-body.admin-mode .admin-add-image-btn {
-    display: inline-flex; /* Show only in Admin Mode */
+body.admin-mode .admin-add-image-btn,
+body.admin-mode .admin-add-video-btn,
+body.admin-mode .admin-add-dl-btn {
+    display: inline-flex;
 }
 
+/* Theme: Image (Orange) */
+.admin-add-image-btn {
+    background: rgba(234, 88, 12, 0.08) !important;
+    border-color: rgba(234, 88, 12, 0.3) !important;
+    color: var(--orange) !important;
+}
 .admin-add-image-btn:hover {
     background: rgba(234, 88, 12, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Theme: Video (Red / YouTube) */
+.admin-add-video-btn {
+    background: rgba(239, 68, 68, 0.08) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+    color: #ef4444 !important;
+}
+.admin-add-video-btn:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Theme: Download Link (Cyan / Blue) */
+.admin-add-dl-btn {
+    background: rgba(6, 182, 212, 0.08) !important;
+    border-color: rgba(6, 182, 212, 0.3) !important;
+    color: var(--cyan) !important;
+}
+.admin-add-dl-btn:hover {
+    background: rgba(6, 182, 212, 0.15) !important;
     transform: translateY(-1px) !important;
 }
 
@@ -2261,6 +2304,66 @@ body.admin-mode .admin-delete-image-btn {
 .admin-delete-image-btn:hover {
     background: #ef4444 !important;
     transform: scale(1.1) !important;
+}
+
+/* Delete Video Button (Floating Trash Can on Video) */
+.admin-delete-video-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(239, 68, 68, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    z-index: 100;
+    padding: 0;
+}
+
+body.admin-mode .admin-delete-video-btn {
+    display: flex;
+}
+
+.admin-delete-video-btn:hover {
+    background: #ef4444 !important;
+    transform: scale(1.1) !important;
+}
+
+/* Delete Download Link Button (Pill alignment inside Download Button) */
+.admin-delete-dl-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(239, 68, 68, 0.95) !important;
+    border: none !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    z-index: 100;
+    padding: 0 !important;
+    font-size: 0.75rem !important;
+}
+
+body.admin-mode .admin-delete-dl-btn {
+    display: flex;
+}
+
+.admin-delete-dl-btn:hover {
+    background: #ef4444 !important;
+    transform: translateY(-50%) scale(1.15) !important;
 }
 
 /* Payment CRUD Interface Styles */

@@ -292,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 4.5. Image Management: Add Image and Delete Image features
+        // 4.5. Image Management: Setup delete button for images
         const setupImageDeleteButtons = (cardNode) => {
             cardNode.querySelectorAll('.offer-image-container').forEach(container => {
                 if (!container.querySelector('.admin-delete-image-btn')) {
@@ -317,30 +317,94 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        // Create "Add Image" button if it doesn't exist
-        let addImgBtn = card.querySelector('.admin-add-image-btn');
+        // 4.6. Video Management: Setup delete button for videos
+        const setupVideoDeleteButtons = (cardNode) => {
+            cardNode.querySelectorAll('.video-wrapper').forEach(container => {
+                if (!container.querySelector('.admin-delete-video-btn')) {
+                    container.style.position = 'relative';
+                    
+                    const delVidBtn = document.createElement('button');
+                    delVidBtn.className = 'admin-delete-video-btn';
+                    delVidBtn.setAttribute('title', 'Delete Video');
+                    delVidBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                    delVidBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to delete the video from this offer card?')) {
+                            container.remove();
+                            // Toggle visibility of Add Video button
+                            const addVidBtnNode = cardNode.querySelector('.admin-add-video-btn');
+                            if (addVidBtnNode) addVidBtnNode.style.display = 'inline-flex';
+                        }
+                    });
+                    container.appendChild(delVidBtn);
+                }
+            });
+        };
+
+        // 4.7. Download Link Management: Setup delete button for download links
+        const setupDownloadDeleteButtons = (cardNode) => {
+            cardNode.querySelectorAll('.card-dl-btn').forEach(dlBtn => {
+                if (!dlBtn.querySelector('.admin-delete-dl-btn')) {
+                    dlBtn.style.position = 'relative';
+                    
+                    const delDlBtn = document.createElement('button');
+                    delDlBtn.className = 'admin-delete-dl-btn';
+                    delDlBtn.setAttribute('title', 'Delete Download Link');
+                    delDlBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                    delDlBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to delete the download link from this card?')) {
+                            dlBtn.remove();
+                            // Toggle visibility of Add Download button
+                            const addDlBtnNode = cardNode.querySelector('.admin-add-dl-btn');
+                            if (addDlBtnNode) addDlBtnNode.style.display = 'inline-flex';
+                        }
+                    });
+                    dlBtn.appendChild(delDlBtn);
+                }
+            });
+        };
+
+        // Run deletion button setups for existing elements
+        setupImageDeleteButtons(card);
+        setupVideoDeleteButtons(card);
+        setupDownloadDeleteButtons(card);
+
+        // 4.8. Create Card Admin Controls Container if not exists
+        let adminControls = card.querySelector('.admin-card-controls');
+        if (!adminControls) {
+            adminControls = document.createElement('div');
+            adminControls.className = 'admin-card-controls';
+            const cardInner = card.querySelector('.card-inner');
+            if (cardInner) {
+                cardInner.appendChild(adminControls);
+            }
+        }
+
+        // A. Add Image Button
+        let addImgBtn = adminControls.querySelector('.admin-add-image-btn');
         if (!addImgBtn) {
             addImgBtn = document.createElement('div');
             addImgBtn.className = 'admin-add-image-btn';
             addImgBtn.innerHTML = '<i class="fa-solid fa-image"></i> Add Image';
             addImgBtn.addEventListener('click', () => {
-                // 1. Immediately create a hidden file input to let them select their image first!
                 const fileInput = document.createElement('input');
                 fileInput.type = 'file';
                 fileInput.accept = 'image/*';
                 fileInput.style.display = 'none';
-                document.body.appendChild(fileInput); // Safe clearance in all browsers
+                document.body.appendChild(fileInput);
                 
                 fileInput.addEventListener('change', (event) => {
                     const file = event.target.files[0];
                     if (file) {
                         if (file.size > 4 * 1024 * 1024) {
-                            alert('⚠️ WARNING: This image file is quite large (over 4MB).\n\nTo ensure your website loads instantly for all mobile and desktop visitors, we highly recommend selecting web-optimized images (under 1MB).');
+                            alert('⚠️ WARNING: This image file is quite large (over 4MB).\n\nTo ensure your website loads instantly, select web-optimized images (under 1MB).');
                         }
 
                         const reader = new FileReader();
                         reader.onload = (e) => {
-                            // 2. ONLY after the file is successfully selected and read, build the container and insert it!
                             const container = document.createElement('div');
                             container.className = 'offer-image-container';
                             container.style.marginTop = '1rem';
@@ -351,14 +415,17 @@ document.addEventListener('DOMContentLoaded', () => {
                             
                             const cardInner = card.querySelector('.card-inner');
                             const table = cardInner.querySelector('.compact-price-table');
+                            const video = cardInner.querySelector('.video-wrapper');
                             const dlBtn = cardInner.querySelector('.card-dl-btn');
                             
                             if (table) {
                                 cardInner.insertBefore(container, table);
+                            } else if (video) {
+                                cardInner.insertBefore(container, video);
                             } else if (dlBtn) {
                                 cardInner.insertBefore(container, dlBtn);
                             } else {
-                                cardInner.appendChild(container);
+                                cardInner.insertBefore(container, adminControls);
                             }
                             
                             setupImageDeleteButtons(card);
@@ -366,37 +433,115 @@ document.addEventListener('DOMContentLoaded', () => {
                         };
                         reader.readAsDataURL(file);
                     }
-                    
-                    // Cleanup input element from DOM
-                    if (fileInput.parentNode) {
-                        fileInput.remove();
-                    }
+                    fileInput.remove();
                 });
-                
-                // Trigger the file picker instantly
                 fileInput.click();
-                
-                // Backup cleanup if they cancel
-                setTimeout(() => {
-                    if (fileInput.parentNode) {
-                        fileInput.remove();
-                    }
-                }, 60000);
             });
-
-            const cardInner = card.querySelector('.card-inner');
-            if (cardInner) {
-                cardInner.appendChild(addImgBtn);
-            }
+            adminControls.appendChild(addImgBtn);
         }
 
-        // Setup visibility and delete buttons
+        // Hide/show Add Image button based on state
         if (card.querySelector('.offer-image-container')) {
             addImgBtn.style.display = 'none';
         } else {
             addImgBtn.style.display = 'inline-flex';
         }
-        setupImageDeleteButtons(card);
+
+        // B. Add Video Button
+        let addVidBtn = adminControls.querySelector('.admin-add-video-btn');
+        if (!addVidBtn) {
+            addVidBtn = document.createElement('div');
+            addVidBtn.className = 'admin-add-video-btn';
+            addVidBtn.innerHTML = '<i class="fa-solid fa-video"></i> Add Video';
+            addVidBtn.addEventListener('click', () => {
+                const link = prompt('🎬 Enter YouTube or TikTok Video Link:\n\nPaste the full link here:\n(e.g., https://www.youtube.com/watch?v=BlbT3bcCl9k)');
+                if (link) {
+                    const videoId = extractVideoId(link);
+                    if (videoId) {
+                        const isTikTok = link.includes('tiktok.com');
+                        const container = document.createElement('div');
+                        container.className = 'video-wrapper';
+                        container.style.marginTop = '1.2rem';
+                        
+                        let thumbUrl = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                        let playIcon = '<i class="fa-brands fa-youtube"></i>';
+                        let videoType = 'youtube';
+                        
+                        if (isTikTok) {
+                            thumbUrl = 'tiktok-thumb.jpg'; // default placeholder
+                            playIcon = '<i class="fa-brands fa-tiktok"></i>';
+                            videoType = 'tiktok';
+                        }
+                        
+                        container.innerHTML = `
+                            <div class="video-placeholder" data-video-type="${videoType}" data-video-id="${videoId}">
+                                <img src="${thumbUrl}" alt="Video Thumbnail" class="video-thumb">
+                                <div class="play-button">${playIcon}</div>
+                            </div>
+                        `;
+                        
+                        const cardInner = card.querySelector('.card-inner');
+                        const dlBtn = cardInner.querySelector('.card-dl-btn');
+                        
+                        if (dlBtn) {
+                            cardInner.insertBefore(container, dlBtn);
+                        } else {
+                            cardInner.insertBefore(container, adminControls);
+                        }
+                        
+                        setupVideoDeleteButtons(card);
+                        addVidBtn.style.display = 'none';
+                        alert('Video added successfully!');
+                    } else {
+                        alert('Could not extract a valid Video ID from that link.');
+                    }
+                }
+            });
+            adminControls.appendChild(addVidBtn);
+        }
+
+        // Hide/show Add Video button based on state
+        if (card.querySelector('.video-wrapper')) {
+            addVidBtn.style.display = 'none';
+        } else {
+            addVidBtn.style.display = 'inline-flex';
+        }
+
+        // C. Add Download Link Button
+        let addDlBtn = adminControls.querySelector('.admin-add-dl-btn');
+        if (!addDlBtn) {
+            addDlBtn = document.createElement('div');
+            addDlBtn.className = 'admin-add-dl-btn';
+            addDlBtn.innerHTML = '<i class="fa-solid fa-download"></i> Add Download Link';
+            addDlBtn.addEventListener('click', () => {
+                const text = prompt('✏️ Enter Download Button Text:\n(e.g., Download KOS Hack APK)', 'Download APK');
+                if (!text) return;
+                const url = prompt('🌐 Enter Download Link URL:', 'https://www.mediafire.com/...');
+                if (!url) return;
+
+                const dlBtnEl = document.createElement('a');
+                dlBtnEl.href = url;
+                dlBtnEl.className = 'card-dl-btn price-editable';
+                dlBtnEl.target = '_blank';
+                dlBtnEl.innerHTML = `<i class="fa-solid fa-download"></i> ${text}`;
+                
+                const cardInner = card.querySelector('.card-inner');
+                cardInner.insertBefore(dlBtnEl, adminControls);
+                
+                makeElementEditable(dlBtnEl);
+                setupDownloadDeleteButtons(card);
+                addDlBtn.style.display = 'none';
+                alert('Download link added successfully!');
+            });
+            adminControls.appendChild(addDlBtn);
+        }
+
+        // Hide/show Add Download Link button based on state
+        if (card.querySelector('.card-dl-btn')) {
+            addDlBtn.style.display = 'none';
+        } else {
+            addDlBtn.style.display = 'inline-flex';
+        }
 
         // 5. Inject a global hovering delete button in the top-right of this card
         if (!card.querySelector('.admin-delete-card-global-btn')) {
@@ -685,6 +830,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-delete-image-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-pay-item-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-pay-item-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-card-controls').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-video-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-dl-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) {
@@ -717,6 +865,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-delete-image-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-add-pay-item-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-pay-item-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-card-controls').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-video-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-dl-btn').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
         if (adminBar) adminBar.remove();
