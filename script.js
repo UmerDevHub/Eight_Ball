@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper to make an element editable with proper event handlers
     const makeElementEditable = (el) => {
         // Safety: Never make admin buttons or admin interface controls editable!
-        if (el.closest('[class*="admin-"]') || el.classList.contains('admin-add-pay-item-btn') || el.classList.contains('admin-delete-pay-item-btn')) {
+        if (el.closest('#admin-bar') || el.closest('#admin-settings-modal') || el.closest('#admin-modal-overlay') || el.classList.contains('admin-add-pay-item-btn') || el.classList.contains('admin-delete-pay-item-btn')) {
             return;
         }
         el.setAttribute('contenteditable', 'true');
