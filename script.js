@@ -224,6 +224,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper to set up full, comprehensive CRUD and text editability inside any card
     const setupCardInteractivity = (card) => {
+        // 0. Wrap all pricing tables inside this card in a .table-wrapper container
+        card.querySelectorAll('.compact-price-table').forEach(table => {
+            if (!table.parentNode.classList.contains('table-wrapper')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'table-wrapper';
+                
+                // If there's an existing media-overlay-text immediately preceding the table, wrap it inside!
+                const prev = table.previousElementSibling;
+                table.parentNode.insertBefore(wrapper, table);
+                if (prev && prev.classList.contains('media-overlay-text')) {
+                    wrapper.appendChild(prev);
+                }
+                wrapper.appendChild(table);
+            }
+        });
+
         // 1. Make all text elements inside this card editable
         const textSelectors = 'h1, h2, h3, h4, h5, h6, p, .btn, td, th, .hero-tag, .copy-box strong, .profile-badge, .profile-status, .card-dl-btn, .media-overlay-text';
         card.querySelectorAll(textSelectors).forEach(el => {
@@ -393,9 +409,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        // Setup direct description button for media containers (images/videos)
+        // Setup direct description button for media/table containers
         const setupMediaDescriptionButtons = (cardNode) => {
-            cardNode.querySelectorAll('.offer-image-container, .video-wrapper').forEach(container => {
+            cardNode.querySelectorAll('.offer-image-container, .video-wrapper, .table-wrapper').forEach(container => {
                 if (!container.querySelector('.admin-create-desc-btn')) {
                     const addDescOverlayBtn = document.createElement('button');
                     addDescOverlayBtn.className = 'admin-create-desc-btn';

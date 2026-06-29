@@ -1937,6 +1937,11 @@ body.admin-mode .price-editable:focus {
     transform: scale(1.05);
 }
 
+.table-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 /* ==========================================
    INTERACTIVE ADMIN MODE CRUD SYSTEM
    ========================================== */
