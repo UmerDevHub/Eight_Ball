@@ -433,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             
                             setupImageDeleteButtons(card);
-                            addImgBtn.style.display = 'none';
                         };
                         reader.readAsDataURL(file);
                     }
@@ -444,12 +443,8 @@ document.addEventListener('DOMContentLoaded', () => {
             adminControls.appendChild(addImgBtn);
         }
 
-        // Hide/show Add Image button based on state
-        if (card.querySelector('.offer-image-container')) {
-            addImgBtn.style.display = 'none';
-        } else {
-            addImgBtn.style.display = 'inline-flex';
-        }
+        // Always show Add Image option
+        addImgBtn.style.display = 'inline-flex';
 
         // B. Add Video Button
         let addVidBtn = adminControls.querySelector('.admin-add-video-btn');
@@ -498,7 +493,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         
                         setupVideoDeleteButtons(card);
-                        addVidBtn.style.display = 'none';
                         alert('Video added successfully!');
                     } else {
                         alert('Could not extract a valid Video ID from that link.');
@@ -508,12 +502,8 @@ document.addEventListener('DOMContentLoaded', () => {
             adminControls.appendChild(addVidBtn);
         }
 
-        // Hide/show Add Video button based on state
-        if (card.querySelector('.video-wrapper')) {
-            addVidBtn.style.display = 'none';
-        } else {
-            addVidBtn.style.display = 'inline-flex';
-        }
+        // Always show Add Video option
+        addVidBtn.style.display = 'inline-flex';
 
         // C. Add Download Link Button
         let addDlBtn = adminControls.querySelector('.admin-add-dl-btn');
@@ -542,18 +532,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 makeElementEditable(dlBtnEl);
                 setupDownloadDeleteButtons(card);
-                addDlBtn.style.display = 'none';
                 alert('Download link added successfully!');
             });
             adminControls.appendChild(addDlBtn);
         }
 
-        // Hide/show Add Download Link button based on state
-        if (card.querySelector('.card-dl-btn')) {
-            addDlBtn.style.display = 'none';
-        } else {
-            addDlBtn.style.display = 'inline-flex';
-        }
+        // Always show Add Download Link option
+        addDlBtn.style.display = 'inline-flex';
 
         // 5. Inject a global hovering delete button in the top-right of this card
         if (!card.querySelector('.admin-delete-card-global-btn')) {
