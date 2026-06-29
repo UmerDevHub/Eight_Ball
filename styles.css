@@ -1937,7 +1937,7 @@ body.admin-mode .price-editable:focus {
     transform: scale(1.05);
 }
 
-.table-wrapper {
+.table-wrapper, .video-container {
     position: relative;
     width: 100%;
 }
@@ -2431,7 +2431,7 @@ body.admin-mode .media-overlay-text {
     transform: translateY(-50%);
     background: transparent !important;
     border: none !important;
-    color: rgba(255, 255, 255, 0.6) !important;
+    color: #64748b !important;
     cursor: pointer !important;
     font-size: 0.9rem !important;
     padding: 4px !important;

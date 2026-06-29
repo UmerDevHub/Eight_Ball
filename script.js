@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Helper to set up full, comprehensive CRUD and text editability inside any card
     const setupCardInteractivity = (card) => {
-        // 0. Wrap all pricing tables inside this card in a .table-wrapper container
+        // 0a. Wrap all pricing tables inside this card in a .table-wrapper container
         card.querySelectorAll('.compact-price-table').forEach(table => {
             if (!table.parentNode.classList.contains('table-wrapper')) {
                 const wrapper = document.createElement('div');
@@ -237,6 +237,29 @@ document.addEventListener('DOMContentLoaded', () => {
                     wrapper.appendChild(prev);
                 }
                 wrapper.appendChild(table);
+            }
+        });
+
+        // 0b. Wrap all video wrappers inside this card in a .video-container container
+        card.querySelectorAll('.video-wrapper').forEach(video => {
+            if (!video.parentNode.classList.contains('video-container')) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'video-container';
+                
+                // If there's an existing media-overlay-text inside the video-wrapper (legacy structure), pull it out!
+                const innerDesc = video.querySelector('.media-overlay-text');
+                
+                video.parentNode.insertBefore(wrapper, video);
+                
+                if (innerDesc) {
+                    wrapper.appendChild(innerDesc); // Put description first inside the wrapper
+                } else {
+                    const prev = video.previousElementSibling;
+                    if (prev && prev.classList.contains('media-overlay-text')) {
+                        wrapper.appendChild(prev);
+                    }
+                }
+                wrapper.appendChild(video);
             }
         });
 
@@ -347,7 +370,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         e.preventDefault();
                         e.stopPropagation();
                         if (confirm('Are you sure you want to delete the video from this offer card?')) {
-                            container.remove();
+                            if (container.parentNode && container.parentNode.classList.contains('video-container')) {
+                                container.parentNode.remove();
+                            } else {
+                                container.remove();
+                            }
                             // Toggle visibility of Add Video button
                             const addVidBtnNode = cardNode.querySelector('.admin-add-video-btn');
                             if (addVidBtnNode) addVidBtnNode.style.display = 'inline-flex';
@@ -411,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Setup direct description button for media/table containers
         const setupMediaDescriptionButtons = (cardNode) => {
-            cardNode.querySelectorAll('.offer-image-container, .video-wrapper, .table-wrapper').forEach(container => {
+            cardNode.querySelectorAll('.offer-image-container, .video-container, .table-wrapper').forEach(container => {
                 if (!container.querySelector('.admin-create-desc-btn')) {
                     const addDescOverlayBtn = document.createElement('button');
                     addDescOverlayBtn.className = 'admin-create-desc-btn';
@@ -570,16 +597,22 @@ document.addEventListener('DOMContentLoaded', () => {
                             </div>
                         `;
                         
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'video-container';
+                        wrapper.style.position = 'relative';
+                        wrapper.style.width = '100%';
+                        wrapper.appendChild(container);
+                        
                         const contentContainer = card.querySelector('.card-content-half') || card.querySelector('.card-inner');
                         const dlBtn = contentContainer.querySelector('.card-dl-btn');
                         
                         if (dlBtn && dlBtn.parentNode === contentContainer) {
-                            contentContainer.insertBefore(container, dlBtn);
+                            contentContainer.insertBefore(wrapper, dlBtn);
                         } else {
                             if (adminControls.parentNode === contentContainer) {
-                                contentContainer.insertBefore(container, adminControls);
+                                contentContainer.insertBefore(wrapper, adminControls);
                             } else {
-                                contentContainer.appendChild(container);
+                                contentContainer.appendChild(wrapper);
                             }
                         }
                         
