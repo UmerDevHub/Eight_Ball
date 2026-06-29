@@ -2228,7 +2228,8 @@ body.admin-mode .card-inner.flex-row {
 /* Base style for Add Actions in Cards */
 .admin-add-image-btn,
 .admin-add-video-btn,
-.admin-add-dl-btn {
+.admin-add-dl-btn,
+.admin-add-desc-btn {
     display: none;
     align-items: center;
     justify-content: center;
@@ -2245,7 +2246,8 @@ body.admin-mode .card-inner.flex-row {
 
 body.admin-mode .admin-add-image-btn,
 body.admin-mode .admin-add-video-btn,
-body.admin-mode .admin-add-dl-btn {
+body.admin-mode .admin-add-dl-btn,
+body.admin-mode .admin-add-desc-btn {
     display: inline-flex;
 }
 
@@ -2279,6 +2281,17 @@ body.admin-mode .admin-add-dl-btn {
 }
 .admin-add-dl-btn:hover {
     background: rgba(6, 182, 212, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Theme: Description (Fuchsia / Purple) */
+.admin-add-desc-btn {
+    background: rgba(217, 70, 239, 0.08) !important;
+    border-color: rgba(217, 70, 239, 0.3) !important;
+    color: var(--fuchsia) !important;
+}
+.admin-add-desc-btn:hover {
+    background: rgba(217, 70, 239, 0.15) !important;
     transform: translateY(-1px) !important;
 }
 
@@ -2369,6 +2382,90 @@ body.admin-mode .admin-delete-dl-btn {
 .admin-delete-dl-btn:hover {
     background: #ef4444 !important;
     transform: translateY(-50%) scale(1.15) !important;
+}
+
+/* Media Description Overlay Text */
+.media-overlay-text {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    right: 12px;
+    background: rgba(15, 23, 42, 0.75) !important; /* Slate 900 */
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 0.85rem !important;
+    padding: 10px 32px 10px 12px !important; /* Extra right padding for close button */
+    border-radius: 8px !important;
+    text-align: center !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    word-wrap: break-word !important;
+    box-sizing: border-box !important;
+}
+
+body.admin-mode .media-overlay-text {
+    cursor: text !important;
+}
+
+/* Delete Description Overlay Button */
+.admin-delete-desc-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    cursor: pointer !important;
+    font-size: 0.9rem !important;
+    padding: 4px !important;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease !important;
+    z-index: 15 !important;
+}
+
+.admin-delete-desc-btn:hover {
+    color: #ef4444 !important;
+}
+
+body.admin-mode .admin-delete-desc-btn {
+    display: flex;
+}
+
+/* Create Description Overlay Button */
+.admin-create-desc-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(217, 70, 239, 0.85) !important; /* Fuchsia matching the description theme */
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    z-index: 100;
+    padding: 0;
+    font-size: 0.8rem;
+}
+
+body.admin-mode .admin-create-desc-btn {
+    display: flex;
+}
+
+.admin-create-desc-btn:hover {
+    background: #d946ef !important;
+    transform: scale(1.1) !important;
 }
 
 /* Payment CRUD Interface Styles */

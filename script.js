@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper to set up full, comprehensive CRUD and text editability inside any card
     const setupCardInteractivity = (card) => {
         // 1. Make all text elements inside this card editable
-        const textSelectors = 'h1, h2, h3, h4, h5, h6, p, .btn, td, th, .hero-tag, .copy-box strong, .profile-badge, .profile-status, .card-dl-btn';
+        const textSelectors = 'h1, h2, h3, h4, h5, h6, p, .btn, td, th, .hero-tag, .copy-box strong, .profile-badge, .profile-status, .card-dl-btn, .media-overlay-text';
         card.querySelectorAll(textSelectors).forEach(el => {
             el.classList.add('price-editable');
             makeElementEditable(el);
@@ -367,10 +367,84 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
+        // Description Management: Setup delete button for descriptions
+        const setupDescriptionDeleteButtons = (cardNode) => {
+            cardNode.querySelectorAll('.media-overlay-text').forEach(overlay => {
+                if (!overlay.querySelector('.admin-delete-desc-btn')) {
+                    const delBtn = document.createElement('button');
+                    delBtn.className = 'admin-delete-desc-btn';
+                    delBtn.setAttribute('title', 'Delete Description');
+                    delBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                    delBtn.contentEditable = 'false';
+                    delBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to delete this description overlay?')) {
+                            const container = overlay.parentNode;
+                            overlay.remove();
+                            if (container) {
+                                const addBtn = container.querySelector('.admin-create-desc-btn');
+                                if (addBtn) addBtn.style.display = 'flex';
+                            }
+                        }
+                    });
+                    overlay.appendChild(delBtn);
+                }
+            });
+        };
+
+        // Setup direct description button for media containers (images/videos)
+        const setupMediaDescriptionButtons = (cardNode) => {
+            cardNode.querySelectorAll('.offer-image-container, .video-wrapper').forEach(container => {
+                if (!container.querySelector('.admin-create-desc-btn')) {
+                    const addDescOverlayBtn = document.createElement('button');
+                    addDescOverlayBtn.className = 'admin-create-desc-btn';
+                    addDescOverlayBtn.setAttribute('title', 'Add Description Overlay');
+                    addDescOverlayBtn.innerHTML = '<i class="fa-solid fa-align-left"></i>';
+                    addDescOverlayBtn.contentEditable = 'false';
+                    
+                    // Show or hide based on whether description overlay already exists
+                    if (container.querySelector('.media-overlay-text')) {
+                        addDescOverlayBtn.style.display = 'none';
+                    } else {
+                        addDescOverlayBtn.style.display = 'flex';
+                    }
+                    
+                    addDescOverlayBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        if (!container.querySelector('.media-overlay-text')) {
+                            const overlay = document.createElement('div');
+                            overlay.className = 'media-overlay-text price-editable';
+                            overlay.innerHTML = '<strong>New Description</strong>';
+                            container.appendChild(overlay);
+                            makeElementEditable(overlay);
+                            setupDescriptionDeleteButtons(cardNode);
+                            
+                            // Hide the add button now that overlay is created
+                            addDescOverlayBtn.style.display = 'none';
+                        }
+                    });
+                    
+                    container.appendChild(addDescOverlayBtn);
+                } else {
+                    const btn = container.querySelector('.admin-create-desc-btn');
+                    if (container.querySelector('.media-overlay-text')) {
+                        btn.style.display = 'none';
+                    } else {
+                        btn.style.display = 'flex';
+                    }
+                }
+            });
+        };
+
         // Run deletion button setups for existing elements
         setupImageDeleteButtons(card);
         setupVideoDeleteButtons(card);
         setupDownloadDeleteButtons(card);
+        setupDescriptionDeleteButtons(card);
+        setupMediaDescriptionButtons(card);
 
         // 4.8. Create Card Admin Controls Container if not exists
         let adminControls = card.querySelector('.admin-card-controls');
@@ -433,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                             
                             setupImageDeleteButtons(card);
+                            setupMediaDescriptionButtons(card);
                         };
                         reader.readAsDataURL(file);
                     }
@@ -493,6 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                         
                         setupVideoDeleteButtons(card);
+                        setupMediaDescriptionButtons(card);
                         alert('Video added successfully!');
                     } else {
                         alert('Could not extract a valid Video ID from that link.');
@@ -539,6 +615,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Always show Add Download Link option
         addDlBtn.style.display = 'inline-flex';
+
+        // D. Add Description Button
+        let addDescBtn = adminControls.querySelector('.admin-add-desc-btn');
+        if (!addDescBtn) {
+            addDescBtn = document.createElement('div');
+            addDescBtn.className = 'admin-add-desc-btn';
+            addDescBtn.innerHTML = '<i class="fa-solid fa-align-left"></i> Add Description';
+            addDescBtn.addEventListener('click', () => {
+                const mediaContainers = card.querySelectorAll('.offer-image-container, .video-wrapper');
+                if (mediaContainers.length === 0) {
+                    alert('⚠️ No image or video found on this card. Please add an image or video first!');
+                    return;
+                }
+                
+                let addedCount = 0;
+                mediaContainers.forEach(container => {
+                    if (!container.querySelector('.media-overlay-text')) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'media-overlay-text price-editable';
+                        overlay.innerHTML = '<strong>New Description</strong>';
+                        container.appendChild(overlay);
+                        makeElementEditable(overlay);
+                        setupDescriptionDeleteButtons(card);
+                        addedCount++;
+                        
+                        // Hide direct add button too!
+                        const addBtn = container.querySelector('.admin-create-desc-btn');
+                        if (addBtn) addBtn.style.display = 'none';
+                    }
+                });
+                
+                if (addedCount > 0) {
+                    alert(`✅ Added description overlay to ${addedCount} media container(s). Click on the overlay to customize it!`);
+                } else {
+                    alert('ℹ️ All images/videos on this card already have a description overlay.');
+                }
+            });
+            adminControls.appendChild(addDescBtn);
+        }
+
+        // Always show Add Description option
+        addDescBtn.style.display = 'inline-flex';
 
         // 5. Inject a global hovering delete button in the top-right of this card
         if (!card.querySelector('.admin-delete-card-global-btn')) {
@@ -830,6 +948,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-card-controls').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-video-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-dl-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-desc-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-create-desc-btn').forEach(el => el.remove());
         document.querySelectorAll('input[type="file"]').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
@@ -866,6 +986,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.admin-card-controls').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-video-btn').forEach(el => el.remove());
         document.querySelectorAll('.admin-delete-dl-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-delete-desc-btn').forEach(el => el.remove());
+        document.querySelectorAll('.admin-create-desc-btn').forEach(el => el.remove());
         document.querySelectorAll('input[type="file"]').forEach(el => el.remove());
 
         const adminBar = document.getElementById('admin-bar');
