@@ -417,8 +417,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (!container.querySelector('.media-overlay-text')) {
                             const overlay = document.createElement('div');
                             overlay.className = 'media-overlay-text price-editable';
-                            overlay.innerHTML = '<strong>New Description</strong>';
-                            container.appendChild(overlay);
+                            overlay.innerText = 'New Description';
+                            container.insertBefore(overlay, container.firstChild);
                             makeElementEditable(overlay);
                             setupDescriptionDeleteButtons(cardNode);
                             
@@ -616,47 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Always show Add Download Link option
         addDlBtn.style.display = 'inline-flex';
 
-        // D. Add Description Button
-        let addDescBtn = adminControls.querySelector('.admin-add-desc-btn');
-        if (!addDescBtn) {
-            addDescBtn = document.createElement('div');
-            addDescBtn.className = 'admin-add-desc-btn';
-            addDescBtn.innerHTML = '<i class="fa-solid fa-align-left"></i> Add Description';
-            addDescBtn.addEventListener('click', () => {
-                const mediaContainers = card.querySelectorAll('.offer-image-container, .video-wrapper');
-                if (mediaContainers.length === 0) {
-                    alert('⚠️ No image or video found on this card. Please add an image or video first!');
-                    return;
-                }
-                
-                let addedCount = 0;
-                mediaContainers.forEach(container => {
-                    if (!container.querySelector('.media-overlay-text')) {
-                        const overlay = document.createElement('div');
-                        overlay.className = 'media-overlay-text price-editable';
-                        overlay.innerHTML = '<strong>New Description</strong>';
-                        container.appendChild(overlay);
-                        makeElementEditable(overlay);
-                        setupDescriptionDeleteButtons(card);
-                        addedCount++;
-                        
-                        // Hide direct add button too!
-                        const addBtn = container.querySelector('.admin-create-desc-btn');
-                        if (addBtn) addBtn.style.display = 'none';
-                    }
-                });
-                
-                if (addedCount > 0) {
-                    alert(`✅ Added description overlay to ${addedCount} media container(s). Click on the overlay to customize it!`);
-                } else {
-                    alert('ℹ️ All images/videos on this card already have a description overlay.');
-                }
-            });
-            adminControls.appendChild(addDescBtn);
-        }
 
-        // Always show Add Description option
-        addDescBtn.style.display = 'inline-flex';
 
         // 5. Inject a global hovering delete button in the top-right of this card
         if (!card.querySelector('.admin-delete-card-global-btn')) {
