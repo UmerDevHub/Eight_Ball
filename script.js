@@ -220,6 +220,18 @@ document.addEventListener('DOMContentLoaded', () => {
         el.setAttribute('contenteditable', 'true');
         // Prevent Enter key from creating new lines in editable fields
         el.addEventListener('keydown', preventEnterKey);
+
+        // Ensure empty elements are truly empty so the CSS :empty placeholder matches correctly
+        el.addEventListener('input', () => {
+            if (el.innerText.trim() === '') {
+                el.innerHTML = '';
+            }
+        });
+        el.addEventListener('blur', () => {
+            if (el.innerText.trim() === '') {
+                el.innerHTML = '';
+            }
+        });
     };
 
     // Helper to set up full, comprehensive CRUD and text editability inside any card

@@ -2417,6 +2417,7 @@ body.admin-mode .admin-delete-dl-btn {
     color: #94a3b8 !important; /* Light slate placeholder */
     font-style: italic !important;
     font-weight: normal !important;
+    pointer-events: none !important;
 }
 
 body.admin-mode .media-overlay-text {
